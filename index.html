@@ -17,6 +17,13 @@
                 }
             }
 
+            function get_drag_icon(element) {
+                var css = document.defaultView.getComputedStyle(element);
+                var background_image = css.backgroundImage;
+                var start = background_image.indexOf('(') + 1;
+                var end = background_image.indexOf(')') - start;
+                return background_image.substr(start, end);
+            }
 
             $(document).ready(function() {
                 if (!Modernizr.draganddrop) {
@@ -48,7 +55,7 @@
                     dragged = this;
                     event.dataTransfer.effectAllowed = 'move';
                     var dragIcon = document.createElement('img');
-                    dragIcon.src = '/images/pieces/alpha/44/wp.png';
+                    dragIcon.src = get_drag_icon(this);
                     dragIcon.width = 100;
                     event.dataTransfer.setDragImage(dragIcon, 22, 22);
                     //event.dataTransfer.setData('text/html', this);
