@@ -17,7 +17,7 @@
                 }
             }
 
-            function get_drag_icon(element) {
+            function getDragIcon(element) {
                 var css = document.defaultView.getComputedStyle(element);
                 var background_image = css.backgroundImage;
                 var start = background_image.indexOf('(') + 1;
@@ -54,7 +54,7 @@
                     dragged = this;
                     event.dataTransfer.effectAllowed = 'move';
                     var dragIcon = document.createElement('img');
-                    dragIcon.src = get_drag_icon(this);
+                    dragIcon.src = getDragIcon(this);
                     dragIcon.width = 100;
                     event.dataTransfer.setDragImage(dragIcon, 22, 22);
                     //event.dataTransfer.setData('text/html', this);
