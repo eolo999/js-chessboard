@@ -1,0 +1,101 @@
+@def SQUARE_SIZE     44px;
+@def PIECES_SIZE     44px;
+@def WHITE_SQUARE    #F0D9B5;
+@def BLACK_SQUARE    #B58863;
+@def BOARD_BORDER_COLOR    rgb(0, 0, 0);
+@def BORDER_THICKNESS 2px;
+
+#wrapper {
+    width: 960px;
+    margin: 0 auto;
+}
+
+table.board {
+    border-spacing: 0px;
+    margin: auto;
+}
+
+.square {
+    width: SQUARE_SIZE;
+    height: SQUARE_SIZE;
+}
+
+.white {
+    color: WHITE_SQUARE;
+}
+
+.black {
+    background-color: BLACK_SQUARE;
+}
+
+.border-corner {
+    background-color: BOARD_BORDER_COLOR;
+    width: BORDER_THICKNESS;
+    height: BORDER_THICKNESS;
+}
+
+.border-square {
+    background-color: BOARD_BORDER_COLOR;
+    width: SQUARE_SIZE;
+    height: BORDER_THICKNESS;
+}
+
+.border-side {
+    background-color: BOARD_BORDER_COLOR;
+    width: BORDER_THICKNESS;
+    height: SQUARE_SIZE;
+}
+
+.piece {
+    width: PIECES_SIZE;
+    height: PIECES_SIZE;
+    cursor: pointer;
+}
+
+.white_pawn {
+    background: url(/images/pieces/alpha/44/wp.png);
+}
+
+.black_pawn {
+    background: url(/images/pieces/alpha/44/bp.png);
+}
+
+.white_rook {
+    background: url(/images/pieces/alpha/44/wr.png);
+}
+
+.black_rook {
+    background: url(/images/pieces/alpha/44/br.png);
+}
+
+.white_knight {
+    background: url(/images/pieces/alpha/44/wn.png);
+}
+
+.black_knight {
+    background: url(/images/pieces/alpha/44/bn.png);
+}
+
+.white_bishop {
+    background: url(/images/pieces/alpha/44/wb.png);
+}
+
+.black_bishop {
+    background: url(/images/pieces/alpha/44/bb.png);
+}
+
+.white_queen {
+    background: url(/images/pieces/alpha/44/wq.png);
+}
+
+.black_queen {
+    background: url(/images/pieces/alpha/44/bq.png);
+}
+
+.white_king {
+    background: url(/images/pieces/alpha/44/wk.png);
+}
+
+.black_king {
+    background: url(/images/pieces/alpha/44/bk.png);
+}

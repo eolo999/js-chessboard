@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test google closure stylesheets</title>
+        <link rel="stylesheet" type="text/css" href="/css/chess.css" />
+        <script type="text/javascript" src="/js/jquery-1.8.1.min.js"></script>
+        <script type="text/javascript" src="/js/modernizr.dnd.js"></script>
+        <script type="text/javascript">
+            var dragged = null;
+            var dropped = null;
+
+            $(document).ready(function() {
+                if (!Modernizr.draganddrop) {
+                    $('body').html("<h1>Your browser doesn't support HTML5 Drag'n'Drop, go get another one!</h1>")
+                    return false;
+                }
+                var pieces = document.querySelectorAll('.piece');
+                [].forEach.call(pieces, function(piece) {
+                    piece.setAttribute('draggable', 'true');
+                    piece.addEventListener('dragstart', dragStartHandler, false);
+                    piece.addEventListener('dragenter', dragEnterHandler, false);
+                    piece.addEventListener('dragover', dragOverHandler, false);
+                    piece.addEventListener('dragleave', dragLeaveHandler, false);
+                    piece.addEventListener('dragover', dragOverHandler, false);
+                    piece.addEventListener('drop', dropOnPieceHandler, false);
+                });
+
+                var squares = document.querySelectorAll('.square');
+                [].forEach.call(squares, function(square) {
+                    square.addEventListener('dragenter', dragEnterHandler, false);
+                    square.addEventListener('dragover', dragOverHandler, false);
+                    square.addEventListener('dragleave', dragLeaveHandler, false);
+                    square.addEventListener('drop', dropOnSquareHandler, false);
+                });
+
+                function dragStartHandler(event) {
+                    console.log('Drag START');
+                    console.log(this.innerHTML);
+                    dragged = this;
+                    event.dataTransfer.effectAllowed = 'move';
+                    var dragIcon = document.createElement('img');
+                    dragIcon.src = '/images/pieces/alpha/44/wp.png';
+                    dragIcon.width = 100;
+                    event.dataTransfer.setDragImage(dragIcon, 22, 22);
+                    //event.dataTransfer.setData('text/html', this);
+                    return false;
+                }
+
+                function dragEnterHandler(event) {
+                    console.log('Drag ENTER')
+                    console.log(this);
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                    return false;
+                }
+
+                function dragOverHandler(event) {
+                    console.log('Drag OVER')
+                    console.log(this);
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = 'move';
+                    return false;
+                }
+
+                function dragLeaveHandler(event) {
+                    console.log('Drag LEAVE')
+                    console.log(this);
+                    event.preventDefault();
+                    return false;
+                }
+
+                function handleDragEnd(event) {
+                    console.log('Drag END');
+                    console.log(this);
+                    event.preventDefault();
+                    return false;
+                }
+
+                function dropOnPieceHandler(event) {
+                    console.log('DROP');
+                    console.log(this.parent);
+                    dropped = this;
+                    if (event.stopPropagation) {
+                        event.stopPropagation();
+                    }
+                    var parentNode = this.parentNode;
+                    this.parentNode.removeChild(this);
+                    parentNode.appendChild(dragged);
+                    return false;
+                }
+
+                function dropOnSquareHandler(event) {
+                    console.log('DROP');
+                    console.log(this);
+                    if (event.stopPropagation) {
+                        event.stopPropagation();
+                    }
+                    this.appendChild(dragged);
+                    return false;
+                }
+            });
+        </script>
+    </head>
+    <body id="wrapper">
+        <table class="board">
+            <tr>
+                <td class="border-corner"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-corner"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square white"><div class="piece black_rook"></div></td>
+                <td class="square black"><div class="piece black_knight"></div></td>
+                <td class="square white"><div class="piece black_bishop"></div></td>
+                <td class="square black"><div class="piece black_queen"></div></td>
+                <td class="square white"><div class="piece black_king"></div></td>
+                <td class="square black"><div class="piece black_bishop"></div></td>
+                <td class="square white"><div class="piece black_knight"></div></td>
+                <td class="square black"><div class="piece black_rook"></div></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square black"><div class="piece black_pawn"></div></td>
+                <td class="square white"><div class="piece black_pawn"></div></td>
+                <td class="square black"><div class="piece black_pawn"></div></td>
+                <td class="square white"><div class="piece black_pawn"></div></td>
+                <td class="square black"><div class="piece black_pawn"></div></td>
+                <td class="square white"><div class="piece black_pawn"></div></td>
+                <td class="square black"><div class="piece black_pawn"></div></td>
+                <td class="square white"><div class="piece black_pawn"></div></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="square black"></td>
+                <td class="square white"></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square white"><div class="piece white_pawn"></div></td>
+                <td class="square black"><div class="piece white_pawn"></div></td>
+                <td class="square white"><div class="piece white_pawn"></div></td>
+                <td class="square black"><div class="piece white_pawn"></div></td>
+                <td class="square white"><div class="piece white_pawn"></div></td>
+                <td class="square black"><div class="piece white_pawn"></div></td>
+                <td class="square white"><div class="piece white_pawn"></div></td>
+                <td class="square black"><div class="piece white_pawn"></div></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-side"></td>
+                <td class="square black"><div class="piece white_rook"></td>
+                <td class="square white"><div class="piece white_knight"></td>
+                <td class="square black"><div class="piece white_bishop"></td>
+                <td class="square white"><div class="piece white_queen"></td>
+                <td class="square black"><div class="piece white_king"></td>
+                <td class="square white"><div class="piece white_bishop"></td>
+                <td class="square black"><div class="piece white_knight"></td>
+                <td class="square white"><div class="piece white_rook"></td>
+                <td class="border-side"></td>
+            </tr>
+            <tr>
+                <td class="border-corner"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-square"></td>
+                <td class="border-corner"></td>
+            </tr>
+        </table>
+    </body>
+
+</html>
