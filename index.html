@@ -25,6 +25,10 @@
                 return background_image.substr(start, end);
             }
 
+            function getSquareInfo() {
+                        console.log(this);
+            }
+
             $(document).ready(function() {
                 if (!Modernizr.draganddrop) {
                     $('body').html("<h1>Your browser doesn't support HTML5 Drag'n'Drop, go get another one!</h1>")
@@ -46,6 +50,7 @@
                     square.addEventListener('dragover', dragOverHandler, false);
                     square.addEventListener('dragleave', dragLeaveHandler, false);
                     square.addEventListener('drop', dropOnSquareHandler, false);
+                    square.addEventListener('mouseover', getSquareInfo, false);
                 });
 
                 function dragStartHandler(event) {
@@ -132,98 +137,98 @@
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square white"><div class="piece black_rook"></div></td>
-                <td class="square black"><div class="piece black_knight"></div></td>
-                <td class="square white"><div class="piece black_bishop"></div></td>
-                <td class="square black"><div class="piece black_queen"></div></td>
-                <td class="square white"><div class="piece black_king"></div></td>
-                <td class="square black"><div class="piece black_bishop"></div></td>
-                <td class="square white"><div class="piece black_knight"></div></td>
-                <td class="square black"><div class="piece black_rook"></div></td>
+                <td column="a" rank="8" class="square white"><div class="piece black_rook"></div></td>
+                <td column="b" rank="8" class="square black"><div class="piece black_knight"></div></td>
+                <td column="c" rank="8" class="square white"><div class="piece black_bishop"></div></td>
+                <td column="d" rank="8" class="square black"><div class="piece black_queen"></div></td>
+                <td column="e" rank="8" class="square white"><div class="piece black_king"></div></td>
+                <td column="f" rank="8" class="square black"><div class="piece black_bishop"></div></td>
+                <td column="g" rank="8" class="square white"><div class="piece black_knight"></div></td>
+                <td column="h" rank="8" class="square black"><div class="piece black_rook"></div></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square black"><div class="piece black_pawn"></div></td>
-                <td class="square white"><div class="piece black_pawn"></div></td>
-                <td class="square black"><div class="piece black_pawn"></div></td>
-                <td class="square white"><div class="piece black_pawn"></div></td>
-                <td class="square black"><div class="piece black_pawn"></div></td>
-                <td class="square white"><div class="piece black_pawn"></div></td>
-                <td class="square black"><div class="piece black_pawn"></div></td>
-                <td class="square white"><div class="piece black_pawn"></div></td>
+                <td column="a" rank="7" class="square black"><div class="piece black_pawn"></div></td>
+                <td column="b" rank="7" class="square white"><div class="piece black_pawn"></div></td>
+                <td column="c" rank="7" class="square black"><div class="piece black_pawn"></div></td>
+                <td column="d" rank="7" class="square white"><div class="piece black_pawn"></div></td>
+                <td column="e" rank="7" class="square black"><div class="piece black_pawn"></div></td>
+                <td column="f" rank="7" class="square white"><div class="piece black_pawn"></div></td>
+                <td column="g" rank="7" class="square black"><div class="piece black_pawn"></div></td>
+                <td column="h" rank="7" class="square white"><div class="piece black_pawn"></div></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
+                <td column="a" rank="6" class="square white"></td>
+                <td column="b" rank="6" class="square black"></td>
+                <td column="c" rank="6" class="square white"></td>
+                <td column="d" rank="6" class="square black"></td>
+                <td column="e" rank="6" class="square white"></td>
+                <td column="f" rank="6" class="square black"></td>
+                <td column="g" rank="6" class="square white"></td>
+                <td column="h" rank="6" class="square black"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
+                <td column="a" rank="5" class="square black"></td>
+                <td column="b" rank="5" class="square white"></td>
+                <td column="c" rank="5" class="square black"></td>
+                <td column="d" rank="5" class="square white"></td>
+                <td column="e" rank="5" class="square black"></td>
+                <td column="f" rank="5" class="square white"></td>
+                <td column="g" rank="5" class="square black"></td>
+                <td column="h" rank="5" class="square white"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
+                <td column="a" rank="4" class="square white"></td>
+                <td column="b" rank="4" class="square black"></td>
+                <td column="c" rank="4" class="square white"></td>
+                <td column="d" rank="4" class="square black"></td>
+                <td column="e" rank="4" class="square white"></td>
+                <td column="f" rank="4" class="square black"></td>
+                <td column="g" rank="4" class="square white"></td>
+                <td column="h" rank="4" class="square black"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
-                <td class="square black"></td>
-                <td class="square white"></td>
+                <td column="a" rank="3" class="square black"></td>
+                <td column="b" rank="3" class="square white"></td>
+                <td column="c" rank="3" class="square black"></td>
+                <td column="d" rank="3" class="square white"></td>
+                <td column="e" rank="3" class="square black"></td>
+                <td column="f" rank="3" class="square white"></td>
+                <td column="g" rank="3" class="square black"></td>
+                <td column="h" rank="3" class="square white"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square white"><div class="piece white_pawn"></div></td>
-                <td class="square black"><div class="piece white_pawn"></div></td>
-                <td class="square white"><div class="piece white_pawn"></div></td>
-                <td class="square black"><div class="piece white_pawn"></div></td>
-                <td class="square white"><div class="piece white_pawn"></div></td>
-                <td class="square black"><div class="piece white_pawn"></div></td>
-                <td class="square white"><div class="piece white_pawn"></div></td>
-                <td class="square black"><div class="piece white_pawn"></div></td>
+                <td column="a" rank="2" class="square white"><div class="piece white_pawn"></div></td>
+                <td column="b" rank="2" class="square black"><div class="piece white_pawn"></div></td>
+                <td column="c" rank="2" class="square white"><div class="piece white_pawn"></div></td>
+                <td column="d" rank="2" class="square black"><div class="piece white_pawn"></div></td>
+                <td column="e" rank="2" class="square white"><div class="piece white_pawn"></div></td>
+                <td column="f" rank="2" class="square black"><div class="piece white_pawn"></div></td>
+                <td column="g" rank="2" class="square white"><div class="piece white_pawn"></div></td>
+                <td column="h" rank="2" class="square black"><div class="piece white_pawn"></div></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td class="square black"><div class="piece white_rook"></td>
-                <td class="square white"><div class="piece white_knight"></td>
-                <td class="square black"><div class="piece white_bishop"></td>
-                <td class="square white"><div class="piece white_queen"></td>
-                <td class="square black"><div class="piece white_king"></td>
-                <td class="square white"><div class="piece white_bishop"></td>
-                <td class="square black"><div class="piece white_knight"></td>
-                <td class="square white"><div class="piece white_rook"></td>
+                <td column="a" rank="1" class="square black"><div class="piece white_rook"></td>
+                <td column="b" rank="1" class="square white"><div class="piece white_knight"></td>
+                <td column="c" rank="1" class="square black"><div class="piece white_bishop"></td>
+                <td column="d" rank="1" class="square white"><div class="piece white_queen"></td>
+                <td column="e" rank="1" class="square black"><div class="piece white_king"></td>
+                <td column="f" rank="1" class="square white"><div class="piece white_bishop"></td>
+                <td column="g" rank="1" class="square black"><div class="piece white_knight"></td>
+                <td column="h" rank="1" class="square white"><div class="piece white_rook"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
