@@ -8,6 +8,15 @@
         <script type="text/javascript">
             var dragged = null;
             var dropped = null;
+            var debugging_object = null;
+            var debugging = false;
+
+            function debug(message) {
+                if (debugging) {
+                    console.log(message);
+                }
+            }
+
 
             $(document).ready(function() {
                 if (!Modernizr.draganddrop) {
@@ -34,8 +43,8 @@
                 });
 
                 function dragStartHandler(event) {
-                    console.log('Drag START');
-                    console.log(this.innerHTML);
+                    debug('Drag START');
+                    debug(this.innerHTML);
                     dragged = this;
                     event.dataTransfer.effectAllowed = 'move';
                     var dragIcon = document.createElement('img');
@@ -47,38 +56,38 @@
                 }
 
                 function dragEnterHandler(event) {
-                    console.log('Drag ENTER')
-                    console.log(this);
+                    debug('Drag ENTER')
+                    debug(this);
                     event.preventDefault();
                     event.dataTransfer.dropEffect = 'move';
                     return false;
                 }
 
                 function dragOverHandler(event) {
-                    console.log('Drag OVER')
-                    console.log(this);
+                    debug('Drag OVER')
+                    debug(this);
                     event.preventDefault();
                     event.dataTransfer.dropEffect = 'move';
                     return false;
                 }
 
                 function dragLeaveHandler(event) {
-                    console.log('Drag LEAVE')
-                    console.log(this);
+                    debug('Drag LEAVE')
+                    debug(this);
                     event.preventDefault();
                     return false;
                 }
 
                 function handleDragEnd(event) {
-                    console.log('Drag END');
-                    console.log(this);
+                    debug('Drag END');
+                    debug(this);
                     event.preventDefault();
                     return false;
                 }
 
                 function dropOnPieceHandler(event) {
-                    console.log('DROP');
-                    console.log(this.parent);
+                    debug('DROP');
+                    debug(this.parent);
                     dropped = this;
                     if (event.stopPropagation) {
                         event.stopPropagation();
@@ -90,8 +99,8 @@
                 }
 
                 function dropOnSquareHandler(event) {
-                    console.log('DROP');
-                    console.log(this);
+                    debug('DROP');
+                    debug(this);
                     if (event.stopPropagation) {
                         event.stopPropagation();
                     }
