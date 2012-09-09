@@ -20,6 +20,17 @@ table.board {
     height: SQUARE_SIZE;
 }
 
+.b_turn, .w_turn {
+    border-radius: 10px/10px;
+    border: solid 1px #000; 
+    width: 10px;
+    height: 10px;
+}
+
+.b_turn {
+    background-color: #000;
+}
+
 .white {
     color: WHITE_SQUARE;
 }
