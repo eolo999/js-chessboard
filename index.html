@@ -310,6 +310,7 @@
                 debug("FEN is VALID");
                 return true;
             }
+
             $(document).ready(function() {
                 if (!Modernizr.draganddrop) {
                     $('body').html("<h1>Your browser doesn't support HTML5 Drag'n'Drop, go get another one!</h1>")
@@ -321,7 +322,6 @@
                 setupDndSquares(squares);
 
             });
-
         </script>
     </head>
     <body id="wrapper">
