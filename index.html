@@ -72,6 +72,7 @@
                 var parentNode = this.parentNode;
                 this.parentNode.removeChild(this);
                 parentNode.appendChild(dragged);
+                toggleActiveColor();
                 return false;
             }
 
@@ -82,6 +83,7 @@
                     event.stopPropagation();
                 }
                 this.appendChild(dragged);
+                toggleActiveColor();
                 return false;
             }
 
@@ -135,9 +137,18 @@
                 return false;
             }
 
+            function toggleActiveColor() {
+                var active_color = document.getElementById('active_color').getAttribute('class');
+                var next_active_color = 'w';
+                if (active_color.indexOf('w') != -1) {
+                    next_active_color = 'b';
+                }
+                document.getElementById('active_color').setAttribute('class', next_active_color + '_turn');
+            }
+
             function displayGameInfos(fen_string) {
                 var fen = fen_string.split(/\s+/);
-                var ac_div = document.getElementById('active_color').setAttribute('class', fen[1] + '_turn');
+                document.getElementById('active_color').setAttribute('class', fen[1] + '_turn');
                 document.getElementById('castling').textContent = fen[2];
             }
 
