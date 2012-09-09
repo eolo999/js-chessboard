@@ -127,13 +127,11 @@
 
             function loadFen() {
                 var fen_string = document.getElementById('fen_string').value;
-                var fen_is_valid = validateFen(fen_string);
-                if (fen_is_valid) {
+                if (validateFen(fen_string)) {
+                    displayGameInfos(fen_string);
                     setupBoardPosition(fen_string);
                     document.getElementById('fen_string').value = '';
-                    displayGameInfos(fen_string);
                 }
-
                 return false;
             }
 
@@ -166,108 +164,23 @@
             }
 
             function placePiece(piece, inverted_rank, column) {
-                var piece_class = null;
-                var piece_rank = null;
-                var piece_column = null;
-                switch(column) {
-                    case 0:
-                        piece_column = 'a';
-                        break;
-                    case 1:
-                        piece_column = 'b';
-                        break;
-                    case 2:
-                        piece_column = 'c';
-                        break;
-                    case 3:
-                        piece_column = 'd';
-                        break;
-                    case 4:
-                        piece_column = 'e';
-                        break;
-                    case 5:
-                        piece_column = 'f';
-                        break;
-                    case 6:
-                        piece_column = 'g';
-                        break;
-                    case 7:
-                        piece_column = 'h';
-                        break;
-                    default:
-                        alert(column);
-                        break;
-                }
-                switch(inverted_rank) {
-                    case 0:
-                        piece_rank = 8;
-                        break;
-                    case 1:
-                        piece_rank = 7;
-                        break;
-                    case 2:
-                        piece_rank = 6;
-                        break;
-                    case 3:
-                        piece_rank = 5;
-                        break;
-                    case 4:
-                        piece_rank = 4;
-                        break;
-                    case 5:
-                        piece_rank = 3;
-                        break;
-                    case 6:
-                        piece_rank = 2;
-                        break;
-                    case 7:
-                        piece_rank = 1;
-                        break;
-                    default:
-                        alert(inverted_rank);
-                        break;
-                }
-                switch(piece) {
-                    case 'P':
-                        piece_class = 'piece white_pawn';
-                        break;
-                    case 'p':
-                        piece_class = 'piece black_pawn';
-                        break;
-                    case 'R':
-                        piece_class = 'piece white_rook';
-                        break;
-                    case 'r':
-                        piece_class = 'piece black_rook';
-                        break;
-                    case 'N':
-                        piece_class = 'piece white_knight';
-                        break;
-                    case 'n':
-                        piece_class = 'piece black_knight';
-                        break;
-                    case 'B':
-                        piece_class = 'piece white_bishop';
-                        break;
-                    case 'b':
-                        piece_class = 'piece black_bishop';
-                        break;
-                    case 'Q':
-                        piece_class = 'piece white_queen';
-                        break;
-                    case 'q':
-                        piece_class = 'piece black_queen';
-                        break;
-                    case 'K':
-                        piece_class = 'piece white_king';
-                        break;
-                    case 'k':
-                        piece_class = 'piece black_king';
-                        break;
-                    default:
-                        alert(piece);
-                        break;
-                }
+                var column_table = {
+                    0: 'a', 1: 'b', 2: 'c', 3: 'd',
+                    4: 'e', 5: 'f', 6: 'g', 7: 'h'
+                };
+                var rank_table = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1};
+                var piece_table = {
+                    'P': 'piece white_pawn', 'R': 'piece white_rook',
+                    'N': 'piece white_knight', 'B': 'piece white_bishop',
+                    'Q': 'piece white_queen', 'K': 'piece white_king',
+                    'p': 'piece black_pawn', 'r': 'piece black_rook',
+                    'n': 'piece black_knight', 'b': 'piece black_bishop',
+                    'q': 'piece black_queen', 'k': 'piece black_king'
+                };
+                var piece_column = column_table[column];
+                var piece_rank = rank_table[inverted_rank];
+                var piece_class = piece_table[piece];
+
                 var piece_div = document.createElement('div');
                 piece_div.setAttribute('class', piece_class);
                 piece_div.setAttribute('draggable', 'true');
