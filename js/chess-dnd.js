@@ -60,7 +60,6 @@ function dropOnSquareHandler(event) {
 
 function setupDnDPieces(pieces) {
     [].forEach.call(pieces, function(piece) {
-        piece.setAttribute('draggable', 'true');
         piece.addEventListener('dragstart', dragStartHandler, false);
         piece.addEventListener('dragenter', dragEnterHandler, false);
         piece.addEventListener('dragover', dragOverHandler, false);

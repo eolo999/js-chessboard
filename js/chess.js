@@ -5,8 +5,8 @@ function clearBoard() {
     });
 }
 
-function loadFen() {
-    var fen_string = document.getElementById('fen_string').value;
+function loadFen(fen_string) {
+    var fen_string = fen_string || document.getElementById('fen_string').value;
     if (validateFen(fen_string)) {
         displayGameInfos(fen_string);
         setupBoardPosition(fen_string);
@@ -70,7 +70,7 @@ function placePiece(piece, inverted_rank, column) {
     var piece_class = piece_table[piece];
 
     var piece_div = document.createElement('div');
-    piece_div.setAttribute('class', piece_class);
+    piece_div.setAttribute('class', 'piece ' + piece_class);
     piece_div.setAttribute('draggable', 'true');
     [].forEach.call(squares, function(square) {
         var square_rank = square.getAttribute('rank');

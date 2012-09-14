@@ -8,9 +8,10 @@
         <script type="text/javascript" src="/js/chess.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
+                squares = document.querySelectorAll('.square');
+                loadFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
                 var pieces = document.querySelectorAll('.piece');
                 setupDnDPieces(pieces);
-                squares = document.querySelectorAll('.square');
                 setupDndSquares(squares);
             });
 
@@ -41,26 +42,26 @@
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td column="a" rank="8" class="square white"><div class="piece black_rook"></div></td>
-                <td column="b" rank="8" class="square black"><div class="piece black_knight"></div></td>
-                <td column="c" rank="8" class="square white"><div class="piece black_bishop"></div></td>
-                <td column="d" rank="8" class="square black"><div class="piece black_queen"></div></td>
-                <td column="e" rank="8" class="square white"><div class="piece black_king"></div></td>
-                <td column="f" rank="8" class="square black"><div class="piece black_bishop"></div></td>
-                <td column="g" rank="8" class="square white"><div class="piece black_knight"></div></td>
-                <td column="h" rank="8" class="square black"><div class="piece black_rook"></div></td>
+                <td column="a" rank="8" class="square white"></td>
+                <td column="b" rank="8" class="square black"></td>
+                <td column="c" rank="8" class="square white"></td>
+                <td column="d" rank="8" class="square black"></td>
+                <td column="e" rank="8" class="square white"></td>
+                <td column="f" rank="8" class="square black"></td>
+                <td column="g" rank="8" class="square white"></td>
+                <td column="h" rank="8" class="square black"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td column="a" rank="7" class="square black"><div class="piece black_pawn"></div></td>
-                <td column="b" rank="7" class="square white"><div class="piece black_pawn"></div></td>
-                <td column="c" rank="7" class="square black"><div class="piece black_pawn"></div></td>
-                <td column="d" rank="7" class="square white"><div class="piece black_pawn"></div></td>
-                <td column="e" rank="7" class="square black"><div class="piece black_pawn"></div></td>
-                <td column="f" rank="7" class="square white"><div class="piece black_pawn"></div></td>
-                <td column="g" rank="7" class="square black"><div class="piece black_pawn"></div></td>
-                <td column="h" rank="7" class="square white"><div class="piece black_pawn"></div></td>
+                <td column="a" rank="7" class="square black"></td>
+                <td column="b" rank="7" class="square white"></td>
+                <td column="c" rank="7" class="square black"></td>
+                <td column="d" rank="7" class="square white"></td>
+                <td column="e" rank="7" class="square black"></td>
+                <td column="f" rank="7" class="square white"></td>
+                <td column="g" rank="7" class="square black"></td>
+                <td column="h" rank="7" class="square white"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
@@ -113,26 +114,26 @@
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td column="a" rank="2" class="square white"><div class="piece white_pawn"></div></td>
-                <td column="b" rank="2" class="square black"><div class="piece white_pawn"></div></td>
-                <td column="c" rank="2" class="square white"><div class="piece white_pawn"></div></td>
-                <td column="d" rank="2" class="square black"><div class="piece white_pawn"></div></td>
-                <td column="e" rank="2" class="square white"><div class="piece white_pawn"></div></td>
-                <td column="f" rank="2" class="square black"><div class="piece white_pawn"></div></td>
-                <td column="g" rank="2" class="square white"><div class="piece white_pawn"></div></td>
-                <td column="h" rank="2" class="square black"><div class="piece white_pawn"></div></td>
+                <td column="a" rank="2" class="square white"></td>
+                <td column="b" rank="2" class="square black"></td>
+                <td column="c" rank="2" class="square white"></td>
+                <td column="d" rank="2" class="square black"></td>
+                <td column="e" rank="2" class="square white"></td>
+                <td column="f" rank="2" class="square black"></td>
+                <td column="g" rank="2" class="square white"></td>
+                <td column="h" rank="2" class="square black"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
                 <td class="border-side"></td>
-                <td column="a" rank="1" class="square black"><div class="piece white_rook"></td>
-                <td column="b" rank="1" class="square white"><div class="piece white_knight"></td>
-                <td column="c" rank="1" class="square black"><div class="piece white_bishop"></td>
-                <td column="d" rank="1" class="square white"><div class="piece white_queen"></td>
-                <td column="e" rank="1" class="square black"><div class="piece white_king"></td>
-                <td column="f" rank="1" class="square white"><div class="piece white_bishop"></td>
-                <td column="g" rank="1" class="square black"><div class="piece white_knight"></td>
-                <td column="h" rank="1" class="square white"><div class="piece white_rook"></td>
+                <td column="a" rank="1" class="square black"></td>
+                <td column="b" rank="1" class="square white"></td>
+                <td column="c" rank="1" class="square black"></td>
+                <td column="d" rank="1" class="square white"></td>
+                <td column="e" rank="1" class="square black"></td>
+                <td column="f" rank="1" class="square white"></td>
+                <td column="g" rank="1" class="square black"></td>
+                <td column="h" rank="1" class="square white"></td>
                 <td class="border-side"></td>
             </tr>
             <tr>
