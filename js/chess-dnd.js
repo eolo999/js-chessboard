@@ -42,11 +42,19 @@ dnd.dropOnPieceHandler = function(event) {
     if (event.stopPropagation) {
         event.stopPropagation();
     }
-    var parentNode = dnd.dropped.parentNode;
-    dnd.dropped.parentNode.removeChild(this);
-    parentNode.appendChild(dnd.dragged);
-    toggleActiveColor();
-    return false;
+    var squareNode = dnd.dropped.parentNode;
+    var algebric_start_square = dnd.getSquare(dnd.dragged.parentNode);
+    var algebric_end_square = dnd.getSquare(squareNode);
+    var capturing_piece = dnd.getPiece(dnd.dragged);
+    var captured_piece = dnd.getPiece(dnd.dropped);
+    var valid_end_squares = getValidSquares(capturing_piece[1], start_square);
+    //check for different pieces' color and valid move
+    if ((capturing_piece[0] != captured_piece[0]) && (valid_end_squares.indexOf(end_square) != -1)) {
+        squareNode.removeChild(dnd.dropped);
+        squareNode.appendChild(dnd.dragged);
+        toggleActiveColor();
+        return false;
+    }
 }
 
 dnd.dropOnSquareHandler = function(event) {
@@ -55,7 +63,6 @@ dnd.dropOnSquareHandler = function(event) {
     }
     var start_square = dnd.getSquare(dnd.dragged.parentNode);
     var end_square = dnd.getSquare(event.target);
-    var color = dnd.getPiece(dnd.dragged)[0];
     var piece = dnd.getPiece(dnd.dragged)[1];
     var valid_end_squares = getValidSquares(piece, start_square);
     if (valid_end_squares.indexOf(end_square) != -1) {
