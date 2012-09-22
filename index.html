@@ -8,13 +8,12 @@
         <script type="text/javascript" src="/js/chess.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                squares = document.querySelectorAll('.square');
+                dnd.squares = document.querySelectorAll('.square');
                 loadFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
                 var pieces = document.querySelectorAll('.piece');
-                setupDnDPieces(pieces);
-                setupDndSquares(squares);
+                dnd.setupDnDPieces(pieces);
+                dnd.setupDndSquares(dnd.squares);
             });
-
         </script>
     </head>
     <body id="wrapper">

@@ -1,83 +1,83 @@
-var dragged = null;
-var dropped = null;
-var debugging_object = null;
+var dnd = {};
+dnd.dragged = null;
+dnd.dropped = null;
+dnd.debugging_object = null;
+dnd.squares = null;
 
-var squares = null;
-
-function dragStartHandler(event) {
-    dragged = this;
+dnd.dragStartHandler = function(event) {
+    dnd.dragged = event.target;
     event.dataTransfer.effectAllowed = 'move';
     var dragIcon = document.createElement('img');
-    dragIcon.src = getDragIcon(this);
+    dragIcon.src = dnd.getDragIcon(dnd.dragged);
     dragIcon.width = 100;
     event.dataTransfer.setDragImage(dragIcon, 22, 22);
     //event.dataTransfer.setData('text/html', this);
     return false;
 }
 
-function dragEnterHandler(event) {
+dnd.dragEnterHandler = function(event) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
     return false;
 }
 
-function dragOverHandler(event) {
+dnd.dragOverHandler = function(event) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
     return false;
 }
 
-function dragLeaveHandler(event) {
+dnd.dragLeaveHandler = function(event) {
     event.preventDefault();
     return false;
 }
 
-function handleDragEnd(event) {
+dnd.handleDragEnd = function(event) {
     event.preventDefault();
     return false;
 }
 
-function dropOnPieceHandler(event) {
-    dropped = this;
+dnd.dropOnPieceHandler = function(event) {
+    dnd.dropped = event.target;
     if (event.stopPropagation) {
         event.stopPropagation();
     }
-    var parentNode = this.parentNode;
-    this.parentNode.removeChild(this);
-    parentNode.appendChild(dragged);
+    var parentNode = dnd.dropped.parentNode;
+    dnd.dropped.parentNode.removeChild(this);
+    parentNode.appendChild(dnd.dragged);
     toggleActiveColor();
     return false;
 }
 
-function dropOnSquareHandler(event) {
+dnd.dropOnSquareHandler = function(event) {
     if (event.stopPropagation) {
         event.stopPropagation();
     }
-    this.appendChild(dragged);
+    event.target.appendChild(dnd.dragged);
     toggleActiveColor();
     return false;
 }
 
-function setupDnDPieces(pieces) {
+dnd.setupDnDPieces = function(pieces) {
     [].forEach.call(pieces, function(piece) {
-        piece.addEventListener('dragstart', dragStartHandler, false);
-        piece.addEventListener('dragenter', dragEnterHandler, false);
-        piece.addEventListener('dragover', dragOverHandler, false);
-        piece.addEventListener('dragleave', dragLeaveHandler, false);
-        piece.addEventListener('drop', dropOnPieceHandler, false);
+        piece.addEventListener('dragstart', dnd.dragStartHandler, false);
+        piece.addEventListener('dragenter', dnd.dragEnterHandler, false);
+        piece.addEventListener('dragover', dnd.dragOverHandler, false);
+        piece.addEventListener('dragleave', dnd.dragLeaveHandler, false);
+        piece.addEventListener('drop', dnd.dropOnPieceHandler, false);
     });
 }
 
-function setupDndSquares(squares) {
+dnd.setupDndSquares = function(squares) {
     [].forEach.call(squares, function(square) {
-        square.addEventListener('dragenter', dragEnterHandler, false);
-        square.addEventListener('dragover', dragOverHandler, false);
-        square.addEventListener('dragleave', dragLeaveHandler, false);
-        square.addEventListener('drop', dropOnSquareHandler, false);
+        square.addEventListener('dragenter', dnd.dragEnterHandler, false);
+        square.addEventListener('dragover', dnd.dragOverHandler, false);
+        square.addEventListener('dragleave', dnd.dragLeaveHandler, false);
+        square.addEventListener('drop', dnd.dropOnSquareHandler, false);
     });
 }
 
-function getDragIcon(element) {
+dnd.getDragIcon = function(element) {
     var css = document.defaultView.getComputedStyle(element);
     var background_image = css.backgroundImage;
     var start = background_image.indexOf('(') + 1;
