@@ -47,9 +47,9 @@ dnd.dropOnPieceHandler = function(event) {
     var algebric_end_square = dnd.getSquare(squareNode);
     var capturing_piece = dnd.getPiece(dnd.dragged);
     var captured_piece = dnd.getPiece(dnd.dropped);
-    var valid_end_squares = getValidSquares(capturing_piece[1], start_square);
+    var valid_end_squares = getValidSquares(capturing_piece[1], algebric_start_square);
     //check for different pieces' color and valid move
-    if ((capturing_piece[0] != captured_piece[0]) && (valid_end_squares.indexOf(end_square) != -1)) {
+    if ((capturing_piece[0] != captured_piece[0]) && (valid_end_squares.indexOf(algebric_end_square) != -1)) {
         squareNode.removeChild(dnd.dropped);
         squareNode.appendChild(dnd.dragged);
         toggleActiveColor();
