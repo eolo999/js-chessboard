@@ -1,0 +1,5 @@
+* Check square when landing on another piece (dropOnPieceHandler)
+* Black pawns allowed moves are in different direction
+* Pieces cannot land on squares occupied by same color
+* Pieces cannot cross other pieces (except Knight)
+* It is slow!
