@@ -53,10 +53,27 @@ dnd.dropOnSquareHandler = function(event) {
     if (event.stopPropagation) {
         event.stopPropagation();
     }
-    event.target.appendChild(dnd.dragged);
-    toggleActiveColor();
-    return false;
+    var start_square = dnd.getSquare(dnd.dragged.parentNode);
+    var end_square = dnd.getSquare(event.target);
+    var color = dnd.getPiece(dnd.dragged)[0];
+    var piece = dnd.getPiece(dnd.dragged)[1];
+    var valid_end_squares = getValidSquares(piece, start_square);
+    if (valid_end_squares.indexOf(end_square) != -1) {
+        event.target.appendChild(dnd.dragged);
+        toggleActiveColor();
+        return false;
+    }
 }
+
+dnd.getSquare = function(element) {
+    return element.getAttribute('column') + element.getAttribute('rank');
+}
+
+dnd.getPiece = function(element) {
+    var piece_class = element.getAttribute('class');
+    piece_class = piece_class.split(' ').pop('piece');
+    return piece_class.split('_');
+};
 
 dnd.setupDnDPieces = function(pieces) {
     [].forEach.call(pieces, function(piece) {
