@@ -163,7 +163,6 @@ chess.initValidMoves = function() {
  */
 chess.getValidSquares = function(piece, start_square) {
     var result = chess.valid_moves[piece][start_square];
-    console.log(result);
     return result;
 };
 
