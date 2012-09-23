@@ -110,3 +110,11 @@ table.board {
 .black_king {
     background: url(/images/pieces/alpha/44/bk.png);
 }
+
+[move=valid] {
+    background-color: #0f0;
+}
+
+[move=invalid] {
+    background-color: #f00;
+}
