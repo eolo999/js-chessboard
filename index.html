@@ -8,7 +8,7 @@
         <script type="text/javascript" src="/js/chess.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                initValidMoves();
+                chess.initValidMoves();
                 dnd.squares = document.querySelectorAll('.square');
                 loadFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
                 var pieces = document.querySelectorAll('.piece');

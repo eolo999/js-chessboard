@@ -1,9 +1,26 @@
-// 0 is for white
-// 1 is for black
-var columns_string = 'abcdefgh';
-var ranks_string = '12345678';
 var trait = 0;
-var valid_moves = {
+
+var chess = {};
+
+/**
+ * A string representing all board columns' names
+ * @type {string}
+ * @const
+ */
+chess.COLUMNS_STRING = 'abcdefgh';
+
+/**
+ * A string representing all board ranks' names
+ * @type {string}
+ * @const
+ */
+chess.RANKS_STRING = '12345678';
+
+/**
+ * An object representing all valid moves by piece and starting square
+ * @type {Object.<string, Array.<string>>}
+ */
+chess.valid_moves = {
     pawn: {},
     knight: {},
     bishop: {},
@@ -12,29 +29,40 @@ var valid_moves = {
     king: {}
 };
 
-var all_squares = function() {
+/**
+ * An array of all 64 square names in algebraic notation
+ * @type {Array.<string>}
+ */
+chess.ALL_SQUARES = function() {
     var result = [];
-    for (rank = 1; rank < 9; rank++) {
-        for (column_index in columns_string) {
-            result.push(columns_string[column_index] + rank);
+    for (var rank = 1; rank < 9; rank++) {
+        for (var column_index in chess.COLUMNS_STRING) {
+            result.push(chess.COLUMNS_STRING[column_index] + rank);
         }
     }
     return result;
 }();
 
-var algebraic_table = function() {
+/**
+ * Represents a mapping between squares in algebraic notation and their column,
+ * rank indexes
+ * @type {Object.<string, Object.<number>>}
+ */
+chess.ALGEBRAIC_TABLE = function() {
     var result = {};
-    for (x = 0; x < 8; x++) {
-        for (y = 0; y < 8; y++) {
-            result[columns_string[x] + ranks_string[y]] = {column: x, rank: y};
+    for (var x = 0; x < 8; x++) {
+        for (var y = 0; y < 8; y++) {
+            result[chess.COLUMNS_STRING[x] + chess.RANKS_STRING[y]] =
+                {column: x, rank: y};
         }
     }
     return result;
 }();
 
-
-function initValidMoves() {
-    var columns = 'abcdefgh';
+/**
+ * Fills up 'chess.valid_moves' table
+ */
+chess.initValidMoves = function() {
     var pieces = ['pawn', 'knight', 'bishop', 'rook', 'queen', 'king'];
     var valid_piece_moves_function = {
         pawn: validPawnMoves,
@@ -44,11 +72,12 @@ function initValidMoves() {
         queen: validQueenMoves,
         king: validKingMoves
     };
-    for (square_index in all_squares) {
-        for (piece_index in pieces) {
+    for (var square_index in chess.ALL_SQUARES) {
+        for (var piece_index in pieces) {
             var piece = pieces[piece_index];
-            var square = all_squares[square_index];
-            valid_moves[piece][square] = valid_piece_moves_function[piece](square);
+            var square = chess.ALL_SQUARES[square_index];
+            chess.valid_moves[piece][square] =
+                valid_piece_moves_function[piece](square);
         }
     }
 
@@ -60,13 +89,17 @@ function initValidMoves() {
     }
 
     function validKnightMoves(algebraic_square) {
-        var knight_moves_diff = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+        var knight_moves_diff = [
+            [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+            [1, -2], [1, 2], [2, -1], [2, 1]
+        ];
         return valid_moves_by_diff(algebraic_square, knight_moves_diff);
     }
 
     function validBishopMoves(algebraic_square) {
         var bishop_moves_diff = [
-            [-1, -1], [-2, -2], [-3, -3], [-4, -4], [-5, -5], [-6, -6], [-7, -7],
+            [-1, -1], [-2, -2], [-3, -3],
+                [-4, -4], [-5, -5], [-6, -6], [-7, -7],
             [-1, 1], [-2, 2], [-3, 3], [-4, 4], [-5, 5], [-6, 6], [-7, 7],
             [1, -1], [2, -2], [3, -3], [4, -4], [5, -5], [6, -6], [7, -7],
             [1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]
@@ -75,7 +108,7 @@ function initValidMoves() {
     }
 
     function validRookMoves(square) {
-        var valid_squares = all_squares.filter(function(x) {
+        var valid_squares = chess.ALL_SQUARES.filter(function(x) {
             return (
                     (x[0] == square[0] || x[1] == square[1]) &&
                     !(x[0] == square[0] && x[1] == square[1]));
@@ -90,29 +123,49 @@ function initValidMoves() {
     }
 
     function validKingMoves(algebraic_square) {
-        var king_moves_diff = [[0, 1], [0, -1], [1, 0], [-1, 0], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+        var king_moves_diff = [
+            [0, 1], [0, -1], [1, 0], [-1, 0],
+            [-1, -1], [-1, 1], [1, -1], [1, 1]
+        ];
         return valid_moves_by_diff(algebraic_square, king_moves_diff);
     }
 
     function valid_moves_by_diff(algebraic_square, moves_diff) {
-        var start_square = algebraic_table[algebraic_square];
+        var start_square = chess.ALGEBRAIC_TABLE[algebraic_square];
         var result = [];
-        for (index in moves_diff) {
+        for (var index in moves_diff) {
             var x_diff = moves_diff[index][0];
             var y_diff = moves_diff[index][1];
-            var destination_square = {column: start_square.column + x_diff, rank: start_square.rank + y_diff};
-            if ((destination_square.column >= 0 && destination_square.column < 8) && (destination_square.rank >= 0 && destination_square.rank < 8)) {
-                result.push(columns_string[destination_square.column] + ranks_string[destination_square.rank]);
+            var destination_square = {
+                column: start_square.column + x_diff,
+                rank: start_square.rank + y_diff
+            };
+            if ((0 <= destination_square.column < 8) &&
+                    (0 <= destination_square.rank < 8)) {
+                var column = chess.COLUMNS_STRING[destination_square.column];
+                var rank = chess.RANKS_STRING[destination_square.rank];
+                if (column != undefined && rank != undefined) {
+                    result.push(column + rank);
+                }
             }
         }
         return result;
     }
-}
+};
 
-
-function getValidSquares(piece, start_square) {
-    return valid_moves[piece][start_square];
-}
+/**
+ * Given a piece name and a starting square return all valid destination
+ * squares
+ * @param {string} piece A string defining a chess piece.
+ * @param {string} start_square A string representing a square in algebraic
+ * notation.
+ * @return {Array.<string>} All valid destination squares in algebraic notation.
+ */
+chess.getValidSquares = function(piece, start_square) {
+    var result = chess.valid_moves[piece][start_square];
+    console.log(result);
+    return result;
+};
 
 function hasTrait(color_number) {
     return trait == color_number;
@@ -160,17 +213,20 @@ function loadFen(fen_string) {
 }
 
 function toggleActiveColor() {
-    var active_color = document.getElementById('active_color').getAttribute('class');
+    var active_color =
+        document.getElementById('active_color').getAttribute('class');
     var next_active_color = 'w';
     if (active_color.indexOf('w') != -1) {
         next_active_color = 'b';
     }
-    document.getElementById('active_color').setAttribute('class', next_active_color + '_turn');
+    document.getElementById('active_color').setAttribute('class',
+            next_active_color + '_turn');
 }
 
 function displayGameInfos(fen_string) {
     var fen = fen_string.split(/\s+/);
-    document.getElementById('active_color').setAttribute('class', fen[1] + '_turn');
+    document.getElementById('active_color').setAttribute('class',
+            fen[1] + '_turn');
     document.getElementById('castling').textContent = fen[2];
 }
 
@@ -179,15 +235,15 @@ function setupBoardPosition(fen_string) {
     var fen = fen_string.split(/\s+/);
     var pieces_position = fen[0];
     var ranks = pieces_position.split('/');
-    for (rank_index = 0; rank_index < ranks.length; rank_index++) {
+    for (var rank_index = 0; rank_index < ranks.length; rank_index++) {
         var rank = ranks[rank_index];
-        var number = 0
-            for (i = 0; i < rank.length; i++) {
+        var number = 0;
+            for (var i = 0; i < rank.length; i++) {
                 if (isNaN(rank[i])) {
                     placePiece(rank[i], rank_index, number);
-                    number += 1
+                    number += 1;
                 } else {
-                    number += parseInt(rank[i]);
+                    number += parseInt(rank[i], 10);
                 }
             }
     }
@@ -219,7 +275,8 @@ function placePiece(piece, inverted_rank, column) {
     [].forEach.call(dnd.squares, function(square) {
         var square_rank = square.getAttribute('rank');
         var square_column = square.getAttribute('column');
-        if ((parseInt(square_rank) == piece_rank) && (square_column == piece_column)) {
+        if ((parseInt(square_rank, 10) == piece_rank) &&
+            (square_column == piece_column)) {
             square.appendChild(piece_div);
         }
     });
@@ -242,7 +299,7 @@ function validateFen(fen_string) {
                     if (previous_was_number) {
                         return false;
                     }
-                    sum_fields += parseInt(ranks[i][k]);
+                    sum_fields += parseInt(ranks[i][k], 10);
                     previous_was_number = true;
                 } else {
                     if (!/^[prnbqkPRNBQK]$/.test(ranks[i][k])) {
@@ -293,7 +350,7 @@ function validateFen(fen_string) {
 
     function validateFullmoveNumber(fullmove_number) {
         if (isNaN(fullmove_number) || (parseInt(fullmove_number, 10) <= 0)) {
-            return {valid: false, error_number: 2, error: errors[2]};
+            return false;
         } else {
             return true;
         }
@@ -301,42 +358,42 @@ function validateFen(fen_string) {
 
     var fen = fen_string.split(/\s+/);
     if (fen.length != 6) {
-        alert("FEN is more than 6 fields");
+        alert('FEN is more than 6 fields');
         return false;
     }
 
     var pieces_position = fen[0];
     if (!validatePiecesPosition(pieces_position)) {
-        alert("FEN has wrong piece positions");
+        alert('FEN has wrong piece positions');
         return false;
     }
 
     var active_color = fen[1];
     if (!validateActiveColor(active_color)) {
-        alert("FEN has wrong active color field");
+        alert('FEN has wrong active color field');
         return false;
     }
 
     var castling = fen[2];
     if (!validateCastling(castling)) {
-        alert("FEN has wrong castling field");
+        alert('FEN has wrong castling field');
         return false;
     }
     var enpassant = fen[3];
     if (!validateEnPassant(enpassant)) {
-        alert("FEN has wrong enpassant field");
+        alert('FEN has wrong enpassant field');
         return false;
     }
 
     var halfmove_clock = fen[4];
     if (!validateHalfmoveClock(halfmove_clock)) {
-        alert("FEN has wrong halfmove clock field");
+        alert('FEN has wrong halfmove clock field');
         return false;
     }
 
     var fullmove_number = fen[5];
     if (!validateFullmoveNumber(fullmove_number)) {
-        alert("FEN has wrong fullmove field");
+        alert('FEN has wrong fullmove field');
         return false;
     }
     return true;

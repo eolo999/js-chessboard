@@ -9,7 +9,7 @@ dnd.dragStartHandler = function(event) {
     var square_node = node.parentNode;
     var piece = dnd.getPiece(event.target);
     var algebric_start_square = dnd.getSquare(square_node);
-    var valid_end_squares = getValidSquares(piece[1], algebric_start_square);
+    var valid_end_squares = chess.getValidSquares(piece[1], algebric_start_square);
     dnd.dragged = {
         node: node,
         square_node: square_node,
