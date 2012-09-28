@@ -2,6 +2,13 @@ var _128 = new Object();
 var board = new Object();
 var ui = new Object();
 
+/**
+ * String representation of all columns.
+ * @type {string}
+ * @const
+ */
+_128.COLUMNS = 'abcdefgh';
+
 /** Creates an array of 128 zeroes.
  * @return {Array.<number>} An array of 128 zeroes.
  */
@@ -35,7 +42,6 @@ board.COLORS = [
     1, 0, 1, 0, 1, 0, 1, 0, -1, -1, -1, -1, -1, -1, -1, -1,
     0, 1, 0, 1, 0, 1, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1,
     1, 0, 1, 0, 1, 0, 1, 0, -1, -1, -1, -1, -1, -1, -1, -1];
-
 
 /**
  * Represents pieces positions on the board.
@@ -163,4 +169,63 @@ ui.loadFen = function() {
     ui.drawPieces();
 };
 
+board.numberToAlgebraic = function(square) {
+    var column = square & 0x7
+    var rank = square >> 4;
+    return _128.COLUMNS[column] + (rank + 1);
+};
 
+board.algebraicToNumber = function(square) {
+    var column = _128.COLUMNS.indexOf(square[0]);
+    var rank = square[1] - 1
+    return (0x10 * rank) + column;
+};
+
+board.validSlidingMoves = function(start, move_deltas) {
+    var moves = [];
+    for (var index = 0; index < move_deltas.length; index++) {
+        var delta = move_deltas[index];
+        var current_square = start + delta;
+        while (board.on_board(current_square)) {
+            moves.push(current_square);
+            current_square += delta;
+        }
+    }
+    return moves;
+};
+
+board.validNotSlidingMoves = function(start, move_deltas) {
+    var moves = [];
+    for (var index = 0; index < move_deltas.length; index++) {
+        var delta = move_deltas[index];
+        var end = start + delta;
+        if (board.on_board(end)) {
+            moves.push(end);
+        }
+    }
+    return moves;
+};
+
+board.validBishopMoves = function(start) {
+    var move_deltas = [17, 15, -17, -15];
+    return board.validSlidingMoves(start, move_deltas);
+};
+
+board.validRookMoves = function(start) {
+    var move_deltas = [16, 1, -16, -1];
+    return board.validSlidingMoves(start, move_deltas);
+};
+
+board.validQueenMoves = function(start) {
+    return board.validBishopMoves(start).concat(board.validRookMoves(start));
+};
+
+board.validKnightMoves = function(start) {
+    var move_deltas = [14, 18, 31, 33, -14 , -18, -31, -33];
+    return board.validNotSlidingMoves(start, move_deltas);
+};
+
+board.validKingMoves = function(start) {
+    var move_deltas = [16, 17, 1, -15, -16, -17, -1, 15];
+    return board.validNotSlidingMoves(start, move_deltas);
+};
