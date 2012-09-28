@@ -53,11 +53,12 @@ board.resetPieces = function() {
 /**
  * Checks wether a square is on the left side of the 0x88 board (the valid
  * side).
- * @type {function(number)}
+ * @param {number} square The square number.
+ * @return {boolean} True if square is on board, false otherwise.
  */
 board.on_board = function(square) {
     return (square & 0x88) == 0;
-}
+};
 
 /**
  * Place the pieces on the board according to a FEN string if given otherwise
@@ -85,11 +86,6 @@ board.setupFromFen = function(fen_string) {
     }
 };
 
-board.diagonalsPassingFor = function (square) {
-
-    // body...
-}
-
 /**
  * Creates the HTML elements to show the board and attach them to the #board
  * element in the document.
@@ -108,7 +104,7 @@ ui.drawBoard = function() {
                     table.insertBefore(tr, old_tr);
                     old_tr = tr;
                 }
-                var tr = document.createElement('tr');
+                tr = document.createElement('tr');
             }
             var color = board.COLORS[square];
             var td = document.createElement('td');
@@ -144,9 +140,7 @@ ui.resetPieces = function() {
 ui.drawPieces = function() {
     for (var square = 0; square < 0x80; square++) {
         if (board.on_board(square)) {
-            console.log(square);
             var piece = board.pieces[square];
-            console.log('Piece', piece);
             if (piece != 0) {
                 var square_node = document.getElementById(square + '');
                 var div = document.createElement('div');
