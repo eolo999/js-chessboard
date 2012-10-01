@@ -13,7 +13,7 @@ ui.drawBoard = function() {
     var tr = null;
     var old_tr = null;
     for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
+        if (board.onBoard(square)) {
             if (square_counter % 8 == 0) {
                 if (tr) {
                     table.insertBefore(tr, old_tr);
@@ -40,7 +40,7 @@ ui.drawBoard = function() {
  */
 ui.resetPieces = function() {
     for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
+        if (board.onBoard(square)) {
             var square_node = document.getElementById(square + '');
             square_node.innerHTML = '';
         }
@@ -54,7 +54,7 @@ ui.resetPieces = function() {
  */
 ui.drawPieces = function() {
     for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
+        if (board.onBoard(square)) {
             var piece = board.position.pieces[square];
             if (piece != 0) {
                 var square_node = document.getElementById(square + '');
