@@ -93,11 +93,11 @@ board.onBoard = function(square) {
 
 board.getColumn = function(square) {
     return square & 0x7;
-}
+};
 
 board.getRank = function(square) {
     return square >> 4;
-}
+};
 
 board.numberToAlgebraic = function(square) {
     var column = square & 0x7;
@@ -111,6 +111,26 @@ board.algebraicToNumber = function(square) {
     return (0x10 * rank) + column;
 };
 
+board.getPieceColor = function(piece_abbr) {
+    if (piece_abbr == piece_abbr.toUpperCase()) {
+        return 'w';
+    } else {
+        return 'b';
+    }
+};
+
+board.position.toggleTrait = function() {
+    if (board.position.trait == 'w') {
+        board.position.trait = 'b';
+    } else {
+        board.position.trait = 'w';
+    }
+};
+
+board.removeCaptured = function(square) {
+    board.position.pieces[square] = 0;
+};
+
 /**
  * Place the pieces on the board according to a FEN string if given otherwise
  * place pieces in default starting position.
@@ -118,12 +138,12 @@ board.algebraicToNumber = function(square) {
  * (optional).
  */
 board.setupFromFen = function(fen_string) {
-    function validateFEN () {
+    function validateFEN(fen_string) {
         return true;
     }
 
     function setupPieces(rows_string) {
-        var rows = rows_string.split('/').reverse()
+        var rows = rows_string.split('/').reverse();
         for (var row_index = 0; row_index < 8; row_index++) {
             var square = row_index * 0x10;
             for (var index = 0;
@@ -207,6 +227,54 @@ board.validKingMoves = function(start) {
 };
 
 
+/**
+ * Calculate and set in validMovesTable the array of valid moves for this
+ * particular pawn.
+ *
+ * Pawn valid moves depend deeply from context:
+ *
+ * 1) White and Black pawns move in opposite direction.
+ * 2) Can capture on the diagonal squares ahead if occupied by opposite color
+ *    pieces.
+ * 3) Cannot capture straight ahead.
+ * 3) Can move 2 ranks ahead if in their starting position.
+ * 4) Can capture 'en passant' (TODO).
+ *
+ * For simplicity sake we recalculate the array on every pawn move.
+ *
+ * @param {string} color 'w' | 'b' the moving piece color.
+ * @param {number} start The starting square.
+ */
+board.validPawnMoves = function(color, start) {
+        var rank_delta = 0x10;
+        var step, diagonals = [];
+        var moves = [];
+        if (color == 'w') {
+            diagonals = [15, 17];
+            if (board.position.pieces[start + rank_delta] == 0) {
+                step = [start + rank_delta];
+            }
+            if (board.getRank(start) == 1) {
+                step = step.concat([start + (rank_delta * 2)]);
+            }
+        } else {
+            diagonals = [-15, -17];
+            if (board.position.pieces[start - rank_delta] == 0) {
+                step = [start - rank_delta];
+            }
+            if (board.getRank(start) == 6) {
+                step = step.concat([start - (rank_delta * 2)]);
+            }
+        }
+        for (var delta in diagonals) {
+            if (board.position.pieces[start + diagonals[delta]] != 0) {
+                moves.push(start + diagonals[delta]);
+            }
+        }
+        moves = moves.concat(step);
+        board.validMovesTable['pawn'][start] = moves;
+};
+
 board.generateValidMovesTable = function() {
     var piece_function = {
         'knight': board.validKnightMoves,
@@ -218,36 +286,35 @@ board.generateValidMovesTable = function() {
     for (var index = 0; index < 0x80; index++) {
         if (board.onBoard(index)) {
             for (var piece in piece_function) {
-                board.validMovesTable[piece][index] = piece_function[piece](index);
+                board.validMovesTable[piece][index] =
+                    piece_function[piece](index);
             }
         }
     }
 };
 
-board.getPieceColor = function(piece_abbr) {
-    if (piece_abbr == piece_abbr.toUpperCase()) {
-        return 'w';
-    } else {
-        return 'b';
-    }
-};
-
-
-board.position.toggleTrait = function() {
-    if (board.position.trait == 'w') {
-        board.position.trait = 'b';
-    } else {
-        board.position.trait = 'w';
-    }
-};
-
-
-board.removeCaptured = function(square) {
-    board.position.pieces[square] = 0;
-};
-
+/**
+ * Checks if a move is valid.
+ *
+ * Constraints:
+ *
+ * 1) Cannot move when it's not your turn.
+ * 2) Cannot capture same color pieces.
+ * 3) Cannot capture the King.
+ * 4) Pawn valid moves change depending on context.
+ * 5) Cannot move on unreachable square for a given piece.
+ * 6) King can castle. (TODO)
+ * 7) All pieces except Knights cannot jump over obstacles. (TODO)
+ * 8) Must remove check if King is under attack. (TODO)
+ * 9) Cannot move pinned pieces. (TODO)
+ * 10) Handle pawn promotions. (TODO)
+ *
+ * @param {string|number} start The starting square.
+ * @param {string|number} end The destination square.
+ * @return {boolean} Wether the move has been done or not.
+ */
 board.makeMove = function(start, end) {
-    start = parseInt(start);
+    start = parseInt(start, 10);
     var moving_piece_abbr = board.position.pieces[start];
     var moving_piece = board.piecesAbbreviation[moving_piece_abbr];
     var moving_piece_color = board.getPieceColor(moving_piece_abbr);
@@ -284,50 +351,3 @@ board.makeMove = function(start, end) {
     return true;
 };
 
-/** 
- * Calculate and set in validMovesTable the array of valid moves for this
- * particular pawn.
- *
- * Pawn valid moves depend deeply from context:
- *
- * 1) White and Black pawns move in opposite direction.
- * 2) Can capture on the diagonal squares ahead if occupied by opposite color pieces.
- * 3) Cannot capture straight ahead.
- * 3) Can move 2 ranks ahead if in their starting position.
- * 4) Can eat 'en passant' (to be implemented).
- *
- * For simplicity sake we recalculate the array on every pawn move.
- *
- * @param {string} color 'w' | 'b' the moving piece color.
- * @param {number} start The starting square.
- */
-board.validPawnMoves = function(color, start) {
-        // TODO: enpassant
-        var rank_delta = 0x10;
-        var step, diagonals = [];
-        var moves = [];
-        if (color == 'w') {
-            diagonals = [15, 17];
-            if (board.position.pieces[start + rank_delta] == 0) {
-                step = [start + rank_delta];
-            }
-            if (board.getRank(start) == 1) {
-                step = step.concat([start + (rank_delta * 2)]);
-            }
-        } else {
-            diagonals = [-15, -17];
-            if (board.position.pieces[start - rank_delta] == 0) {
-                step = [start - rank_delta];
-            }
-            if (board.getRank(start) == 6) {
-                step = step.concat([start - (rank_delta * 2)]);
-            }
-        }
-        for (delta in diagonals) {
-            if (board.position.pieces[start + diagonals[delta]] != 0) {
-                moves.push(start + diagonals[delta]);
-            }
-        }
-        moves = moves.concat(step);
-        board.validMovesTable['pawn'][start] = moves;
-};
