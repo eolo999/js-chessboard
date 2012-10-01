@@ -1,114 +1,44 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Chess html5 drag 'n' drop example</title>
+        <title>0x88 boards</title>
         <link rel="stylesheet" type="text/css" href="/css/chess.css" />
-        <script type="text/javascript" src="/js/jquery-1.8.1.min.js"></script>
-        <script type="text/javascript" src="/js/chess-dnd.js"></script>
-        <script type="text/javascript" src="/js/chess.js"></script>
+        <script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" src="/js/jquery-ui-1.8.24.custom.min.js"></script>
+        <script type="text/javascript" src="/js/128_board.js"></script>
+        <script type="text/javascript" src="/js/128_ui.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                chess.initValidMoves();
-                dnd.squares = document.querySelectorAll('.square');
-                loadFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
-                var pieces = document.querySelectorAll('.piece');
-                dnd.setupDnDPieces(pieces);
-                dnd.setupDndSquares(dnd.squares);
+                board.generateValidMovesTable();
+                board.setupFromFen();
+                ui.drawBoard();
+                ui.drawPieces();
+                ui.drawTrait();
+                $(".draggable").draggable({
+                    containment: $('.board'),
+                    start: ui.dnd.dragStartHandler,
+                    helper: 'original',
+                    opacity: 0.80,
+                    snap: '.square',
+                    snapTolerance: 5
+                    }
+                );
+                $(".droppable").droppable({
+                    drop: ui.dnd.dropOnSquareHandler
+                    }
+                );
             });
         </script>
     </head>
     <body id="wrapper">
-        <button id="clear_board" type="button" onclick="clearBoard();">Clear Board</button>
         <form>
             FEN: <input id="fen_string" type="text" name="fen" />
-            <input type="submit" value="Load FEN" onclick="loadFen(); return false;"/>
+            <input type="submit" value="Load FEN" onclick="ui.loadFen(); return false;"/>
         </form>
         <div id="game_info">
             Move: <div id="active_color" class="w_turn"></div>
             Castling: <div id="castling">KQkq</div>
         </div>
-        <table class="board">
-            <tr>
-                <td column="a" rank="8" class="square white"></td>
-                <td column="b" rank="8" class="square black"></td>
-                <td column="c" rank="8" class="square white"></td>
-                <td column="d" rank="8" class="square black"></td>
-                <td column="e" rank="8" class="square white"></td>
-                <td column="f" rank="8" class="square black"></td>
-                <td column="g" rank="8" class="square white"></td>
-                <td column="h" rank="8" class="square black"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="7" class="square black"></td>
-                <td column="b" rank="7" class="square white"></td>
-                <td column="c" rank="7" class="square black"></td>
-                <td column="d" rank="7" class="square white"></td>
-                <td column="e" rank="7" class="square black"></td>
-                <td column="f" rank="7" class="square white"></td>
-                <td column="g" rank="7" class="square black"></td>
-                <td column="h" rank="7" class="square white"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="6" class="square white"></td>
-                <td column="b" rank="6" class="square black"></td>
-                <td column="c" rank="6" class="square white"></td>
-                <td column="d" rank="6" class="square black"></td>
-                <td column="e" rank="6" class="square white"></td>
-                <td column="f" rank="6" class="square black"></td>
-                <td column="g" rank="6" class="square white"></td>
-                <td column="h" rank="6" class="square black"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="5" class="square black"></td>
-                <td column="b" rank="5" class="square white"></td>
-                <td column="c" rank="5" class="square black"></td>
-                <td column="d" rank="5" class="square white"></td>
-                <td column="e" rank="5" class="square black"></td>
-                <td column="f" rank="5" class="square white"></td>
-                <td column="g" rank="5" class="square black"></td>
-                <td column="h" rank="5" class="square white"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="4" class="square white"></td>
-                <td column="b" rank="4" class="square black"></td>
-                <td column="c" rank="4" class="square white"></td>
-                <td column="d" rank="4" class="square black"></td>
-                <td column="e" rank="4" class="square white"></td>
-                <td column="f" rank="4" class="square black"></td>
-                <td column="g" rank="4" class="square white"></td>
-                <td column="h" rank="4" class="square black"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="3" class="square black"></td>
-                <td column="b" rank="3" class="square white"></td>
-                <td column="c" rank="3" class="square black"></td>
-                <td column="d" rank="3" class="square white"></td>
-                <td column="e" rank="3" class="square black"></td>
-                <td column="f" rank="3" class="square white"></td>
-                <td column="g" rank="3" class="square black"></td>
-                <td column="h" rank="3" class="square white"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="2" class="square white"></td>
-                <td column="b" rank="2" class="square black"></td>
-                <td column="c" rank="2" class="square white"></td>
-                <td column="d" rank="2" class="square black"></td>
-                <td column="e" rank="2" class="square white"></td>
-                <td column="f" rank="2" class="square black"></td>
-                <td column="g" rank="2" class="square white"></td>
-                <td column="h" rank="2" class="square black"></td>
-            </tr>
-            <tr>
-                <td column="a" rank="1" class="square black"></td>
-                <td column="b" rank="1" class="square white"></td>
-                <td column="c" rank="1" class="square black"></td>
-                <td column="d" rank="1" class="square white"></td>
-                <td column="e" rank="1" class="square black"></td>
-                <td column="f" rank="1" class="square white"></td>
-                <td column="g" rank="1" class="square black"></td>
-                <td column="h" rank="1" class="square white"></td>
-            </tr>
-        </table>
+        <div id="board"></div>
     </body>
-
 </html>
