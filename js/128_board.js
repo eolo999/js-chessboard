@@ -1,13 +1,11 @@
 var debugging_object;
-var _128 = new Object();
 var board = new Object();
-var ui = new Object();
-ui.dnd = new Object();
+board.position = new Object();
 
 /** Creates an array of 128 zeroes.
  * @return {Array.<number>} An array of 128 zeroes.
  */
-_128.initZerosArray = function() {
+board.initZerosArray = function() {
     var result = [];
     for (var i = 0; i < 0x80; i++) {
         result.push(0);
@@ -48,7 +46,7 @@ board.COLORS = [
  * Represents pieces positions on the board.
  * @type {Array.<(number|string)>}
  */
-board.pieces = _128.initZerosArray();
+board.position.pieces = board.initZerosArray();
 
 board.piecesAbbreviation = {
     'N': 'knight',
@@ -63,11 +61,21 @@ board.piecesAbbreviation = {
     'k': 'king'
 }
 
+
+board.validMovesTable = {
+    'knight': new Object(),
+    'bishop': new Object(),
+    'rook': new Object(),
+    'queen': new Object(),
+    'king': new Object()
+};
+
+
 /** Empties the board from every piece.
  * @type {function()}
  */
 board.resetPieces = function() {
-    board.pieces = _128.initZerosArray();
+    board.position.pieces = board.initZerosArray();
 };
 
 /**
@@ -109,13 +117,15 @@ board.setupFromFen = function(fen_string) {
                 index < rows[row_index].length; index++) {
             var letter = rows[row_index][index];
             if (isNaN(letter)) {
-                board.pieces[square] = letter;
+                board.position.pieces[square] = letter;
                 square += 1;
             } else {
                 square += parseInt(letter, 10);
             }
         }
     }
+    var trait = fen_string.split(' ')[1];
+    board.position.trait = trait;
 };
 
 board.validSlidingMoves = function(start, move_deltas) {
@@ -167,20 +177,13 @@ board.validKingMoves = function(start) {
     return board.validNotSlidingMoves(start, move_deltas);
 };
 
-board.validMovesTable = {
-    'knight': new Object(),
-    'bishop': new Object(),
-    'rook': new Object(),
-    'queen': new Object(),
-    'king': new Object()
-};
 
 board.generateValidMovesTable = function() {
     var piece_function = {
         'knight': board.validKnightMoves,
         'bishop': board.validBishopMoves,
         'rook': board.validRookMoves,
-        'queen': board.validRookMoves,
+        'queen': board.validQueenMoves,
         'king': board.validKingMoves
     };
     for (var index = 0; index < 0x80; index++) {
@@ -192,139 +195,52 @@ board.generateValidMovesTable = function() {
     }
 }
 
-/**
- * Creates the HTML elements to show the board and attach them to the #board
- * element in the document.
- * @type {function()}
- */
-ui.drawBoard = function() {
-    var square_counter = 0;
-    var table = document.createElement('table');
-    table.setAttribute('class', 'board');
-    var tr = null;
-    var old_tr = null;
-    for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
-            if (square_counter % 8 == 0) {
-                if (tr) {
-                    table.insertBefore(tr, old_tr);
-                    old_tr = tr;
-                }
-                tr = document.createElement('tr');
-            }
-            var color = board.COLORS[square];
-            var td = document.createElement('td');
-            td.setAttribute('id', square);
-            td.setAttribute('class', 'droppable square ' + board.COLOR[color]);
-            tr.appendChild(td);
-            square_counter += 1;
-        }
-    }
-    table.insertBefore(tr, old_tr);
-    var board_div = document.getElementById('board');
-    board_div.appendChild(table);
-};
-
-/**
- * Remove all pieces' HTML nodes from square elements.
- * @type {function()}
- */
-ui.resetPieces = function() {
-    for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
-            var square_node = document.getElementById(square + '');
-            square_node.innerHTML = '';
-        }
+board.getPieceColor = function(piece_abbr) {
+    if (piece_abbr == piece_abbr.toUpperCase()) {
+        return 'w';
+    } else {
+        return 'b';
     }
 };
 
-/**
- * Creates the pieces' HTML elements according to board.pieces and append them
- * to the proper square element.
- * @type {function()}
- */
-ui.drawPieces = function() {
-    for (var square = 0; square < 0x80; square++) {
-        if (board.on_board(square)) {
-            var piece = board.pieces[square];
-            if (piece != 0) {
-                var square_node = document.getElementById(square + '');
-                var div = document.createElement('div');
-                div.setAttribute('class', 'draggable piece ' + piece);
-                square_node.appendChild(div);
-            }
-        }
+
+board.position.toggleTrait = function() {
+    if (board.position.trait == 'w') {
+        board.position.trait = 'b';
+    } else {
+        board.position.trait = 'w';
     }
 };
 
-/**
- * Redraws the board from the FEN string found in the #fen_string element.
- * @type {function()}
- */
-ui.loadFen = function() {
-    var fen_string = document.getElementById('fen_string').value;
-    board.resetPieces();
-    ui.resetPieces();
-    board.setupFromFen(fen_string);
-    ui.drawPieces();
-};
 
-
-ui.dnd.getSquare = function(node) {
-    return $(node).attr('id');
-};
-
-ui.dnd.getPiece = function(element) {
-    var piece_class = element.attr('class');
-    var piece = piece_class.split(' ')[2];
-    return board.piecesAbbreviation[piece];
-};
-
-ui.dnd.validMove = function(piece, destination) {
-    var chess_piece = ui.dnd.getPiece(piece);
-    var source_square = ui.dnd.getSquare(piece.parent());
-    var end_square = parseInt(ui.dnd.getSquare(destination));
-    var valid_end_squares = board.validMovesTable[chess_piece][source_square];
-    if (valid_end_squares.indexOf(end_square) == -1) {
+board.makeMove = function(start, end) {
+    var moving_piece_abbr = board.position.pieces[start];
+    var piece = board.piecesAbbreviation[moving_piece_abbr];
+    var moving_piece_color = board.getPieceColor(moving_piece_abbr);
+    // Do not move when it's not your turn
+    if (moving_piece_color != board.position.trait) {
         return false;
-    } else {
-        return true;
     }
-}
-
-ui.dnd.dragStartHandler = function(event, draggable_ui) {
-    var node = event.originalEvent.target;
-    var square_node = node.parentNode;
-    var start = ui.dnd.getSquare(square_node);
-    ui.dnd.dragged = {
-        node: node,
-        square_node: square_node,
-        piece: piece,
-        start: start,
-    };
-};
-
-/**
- * Handle piece drop on an empty square. Check if the move is pseudo valid and
- * revert if not.
- *
- * Note: The implementation is rather tricky because I couldn't make the
- * 'revert' callback on the draggable element work properly. I have to flush
- * positioning info from inline css when a valid drop occurs and reset position
- * attributes in the draggable object to revert on invalid drops.
- */
-ui.dnd.dropOnSquareHandler = function(event, ui_element) {
-    var piece = ui_element.draggable;
-    var destination_square = event.target;
-    if (ui.dnd.validMove(piece, event.target)) {
-        $(piece).attr('style', 'position: relative;');
-        $(piece).appendTo(destination_square);
+    var captured_piece_abbr = board.position.pieces[end];
+    // Do not capture same color pieces
+    if (captured_piece_abbr != 0 &&
+            board.getPieceColor(captured_piece_abbr) == moving_piece_color) {
+        return false;
+    }
+    // Cannot capture king
+    if (captured_piece_abbr == 'K' || captured_piece_abbr == 'k') {
+        return false;
+    }
+    // Do not move on an unreachable square
+    if (board.validMovesTable[piece][start].indexOf(end) != -1) {
+        board.position.pieces[start] = 0;
+        board.position.pieces[end] = moving_piece_abbr;
+        board.position.toggleTrait();
         return true;
     } else {
-        ui_element.position.top = 0;
-        ui_element.position.left = 0;
-        $(piece).animate(ui_element.position, 200);
         return false;
     }
 };
+
+
 
