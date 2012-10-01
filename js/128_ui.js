@@ -121,6 +121,7 @@ ui.dnd.dropOnSquareHandler = function(event, ui_element) {
     var piece = ui_element.draggable;
     var destination_square = event.target;
     if (ui.dnd.validMove(piece, event.target)) {
+        $(destination_square).empty();
         $(piece).attr('style', 'position: relative;');
         $(piece).appendTo(destination_square);
         ui.drawTrait();

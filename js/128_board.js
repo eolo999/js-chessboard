@@ -213,6 +213,10 @@ board.position.toggleTrait = function() {
 };
 
 
+board.removeCaptured = function(square) {
+    board.position.pieces[square] = 0;
+};
+
 board.makeMove = function(start, end) {
     var moving_piece_abbr = board.position.pieces[start];
     var piece = board.piecesAbbreviation[moving_piece_abbr];
@@ -234,6 +238,9 @@ board.makeMove = function(start, end) {
     // Do not move on an unreachable square
     if (board.validMovesTable[piece][start].indexOf(end) != -1) {
         board.position.pieces[start] = 0;
+        if (captured_piece_abbr != 0) {
+            board.removeCaptured(end);
+        }
         board.position.pieces[end] = moving_piece_abbr;
         board.position.toggleTrait();
         return true;
