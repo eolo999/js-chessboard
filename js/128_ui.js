@@ -83,6 +83,24 @@ ui.loadFen = function() {
     board.setupFromFen(fen_string);
     ui.drawPieces();
     ui.drawTrait();
+    ui.dnd.setup();
+};
+
+
+ui.dnd.setup = function() {
+    $(".draggable").draggable({
+        containment: $('.board'),
+        start: ui.dnd.dragStartHandler,
+        helper: 'original',
+        opacity: 0.80,
+        snap: '.square',
+        snapTolerance: 5
+        }
+    );
+    $(".droppable").droppable({
+        drop: ui.dnd.dropOnSquareHandler
+        }
+    );
 };
 
 

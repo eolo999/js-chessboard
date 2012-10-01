@@ -14,19 +14,7 @@
                 ui.drawBoard();
                 ui.drawPieces();
                 ui.drawTrait();
-                $(".draggable").draggable({
-                    containment: $('.board'),
-                    start: ui.dnd.dragStartHandler,
-                    helper: 'original',
-                    opacity: 0.80,
-                    snap: '.square',
-                    snapTolerance: 5
-                    }
-                );
-                $(".droppable").droppable({
-                    drop: ui.dnd.dropOnSquareHandler
-                    }
-                );
+                ui.dnd.setup();
             });
         </script>
     </head>
