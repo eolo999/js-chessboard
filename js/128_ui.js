@@ -67,7 +67,7 @@ ui.drawPieces = function() {
 };
 
 
-ui.drawTrait = function () {
+ui.drawTrait = function() {
     var trait = board.position.trait;
     $('#active_color').attr('class', trait + '_turn');
 };
@@ -88,16 +88,15 @@ ui.loadFen = function() {
 
 
 ui.dnd.setup = function() {
-    $(".draggable").draggable({
+    $('.draggable').draggable({
         containment: $('.board'),
-        start: ui.dnd.dragStartHandler,
         helper: 'original',
         opacity: 0.80,
         snap: '.square',
         snapTolerance: 5
         }
     );
-    $(".droppable").droppable({
+    $('.droppable').droppable({
         drop: ui.dnd.dropOnSquareHandler
         }
     );
@@ -112,18 +111,6 @@ ui.dnd.validMove = function(piece, destination) {
     var source_square = ui.dnd.getSquare(piece.parent());
     var end_square = parseInt(ui.dnd.getSquare(destination));
     return board.makeMove(source_square, end_square);
-}
-
-ui.dnd.dragStartHandler = function(event, draggable_ui) {
-    var node = event.originalEvent.target;
-    var square_node = node.parentNode;
-    var start = ui.dnd.getSquare(square_node);
-    ui.dnd.dragged = {
-        node: node,
-        square_node: square_node,
-        piece: piece,
-        start: start,
-    };
 };
 
 /**

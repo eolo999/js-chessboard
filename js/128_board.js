@@ -59,7 +59,7 @@ board.piecesAbbreviation = {
     'q': 'queen',
     'K': 'king',
     'k': 'king'
-}
+};
 
 
 board.validMovesTable = {
@@ -89,14 +89,14 @@ board.on_board = function(square) {
 };
 
 board.numberToAlgebraic = function(square) {
-    var column = square & 0x7
+    var column = square & 0x7;
     var rank = square >> 4;
     return board.COLUMNS[column] + (rank + 1);
 };
 
 board.algebraicToNumber = function(square) {
     var column = board.COLUMNS.indexOf(square[0]);
-    var rank = square[1] - 1
+    var rank = square[1] - 1;
     return (0x10 * rank) + column;
 };
 
@@ -188,12 +188,12 @@ board.generateValidMovesTable = function() {
     };
     for (var index = 0; index < 0x80; index++) {
         if (board.on_board(index)) {
-            for (piece in piece_function) {
+            for (var piece in piece_function) {
                 board.validMovesTable[piece][index] = piece_function[piece](index);
             }
         }
     }
-}
+};
 
 board.getPieceColor = function(piece_abbr) {
     if (piece_abbr == piece_abbr.toUpperCase()) {
@@ -248,6 +248,4 @@ board.makeMove = function(start, end) {
         return false;
     }
 };
-
-
 
