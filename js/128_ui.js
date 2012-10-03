@@ -72,12 +72,18 @@ ui.drawTrait = function() {
     $('#active_color').attr('class', trait + '_turn');
 };
 
+
+/**
+ * Redraws the Pieces on the board.
+ */
 ui.redrawPosition = function() {
     ui.resetPieces();
     ui.drawPieces();
     ui.drawTrait();
     ui.dnd.setup();
 };
+
+
 /**
  * Redraws the board from the FEN string found in the #fen_string element.
  * @type {function()}
