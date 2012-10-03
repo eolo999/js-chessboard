@@ -443,7 +443,7 @@ board.validKingMoves = function(start) {
  *    pieces.
  * 3) Cannot capture straight ahead.
  * 3) Can move 2 ranks ahead if in their starting position.
- * 4) Can capture 'en passant' (TODO).
+ * 4) Can capture 'en passant'.
  *
  * For simplicity sake we recalculate the array on every pawn move.
  *
@@ -501,11 +501,12 @@ board.validPawnMoves = function(color, start) {
  * 3) Cannot capture the King.
  * 4) Pawn valid moves change depending on context.
  * 5) Cannot move on unreachable square for a given piece.
- * 6) King can castle. (TODO)
- * 7) All pieces except Knights cannot jump over obstacles. (TODO)
- * 8) Must remove check if King is under attack. (TODO)
- * 9) Cannot move pinned pieces. (TODO)
- * 10) Handle pawn promotions. (TODO)
+ * 6) Pawns can capture en passant.
+ * 7) King can castle. (TODO)
+ * 8) All pieces except Knights cannot jump over obstacles. (TODO)
+ * 9) Must remove check if King is under attack. (TODO)
+ * 10) Cannot move pinned pieces. (TODO)
+ * 11) Handle pawn promotions. (TODO)
  *
  * @param {string|number} start The starting square.
  * @param {string|number} end The destination square.
@@ -513,6 +514,7 @@ board.validPawnMoves = function(color, start) {
  */
 board.makeMove = function(start, end) {
     start = parseInt(start, 10);
+    end = parseInt(end, 10);
     var moving_piece_abbr = board.position.pieces[start];
     var moving_piece = board.piecesAbbreviation[moving_piece_abbr];
     var moving_piece_color = board.getPieceColor(moving_piece_abbr);
@@ -538,11 +540,32 @@ board.makeMove = function(start, end) {
     if (board.validMovesTable[moving_piece][start].indexOf(end) == -1) {
         return false;
     }
-
     // DO MOVE
     board.position.pieces[start] = 0;
     if (captured_piece_abbr != 0) {
         board.removeCaptured(end);
+    } else {
+        // En passant capture
+        var diagonals = [
+            board.moveDirectionDelta.north_east,
+            board.moveDirectionDelta.north_west
+        ];
+        if (moving_piece == 'pawn' &&
+                diagonals.indexOf(Math.abs(start - end)) != -1) {
+            if (moving_piece_color == 'w') {
+                board.removeCaptured(end + board.moveDirectionDelta.south);
+            } else {
+                board.removeCaptured(end + board.moveDirectionDelta.north);
+            }
+        }
+    }
+    // Set the enpassant square if needed
+    if ((moving_piece == 'pawn') && (Math.abs(start - end) == 0x20)) {
+        if (moving_piece_color == 'w') {
+            board.position.enpassant = start + 0x10;
+        } else {
+            board.position.enpassant = start - 0x10;
+        }
     }
     board.position.pieces[end] = moving_piece_abbr;
     board.position.toggleTrait();
