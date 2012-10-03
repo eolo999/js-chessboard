@@ -515,6 +515,9 @@ board.validPawnMoves = function(color, start) {
 board.makeMove = function(start, end) {
     start = parseInt(start, 10);
     end = parseInt(end, 10);
+    if (start == end) {
+        return false;
+    }
     var moving_piece_abbr = board.position.pieces[start];
     var moving_piece = board.piecesAbbreviation[moving_piece_abbr];
     var moving_piece_color = board.getPieceColor(moving_piece_abbr);
