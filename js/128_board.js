@@ -82,18 +82,19 @@ board.position.pieces = board.initZerosArray();
  * @const
  */
 board.piecesAbbreviation = {
-    'P': 'pawn',
-    'p': 'pawn',
-    'N': 'knight',
-    'n': 'knight',
-    'B': 'bishop',
-    'b': 'bishop',
-    'R': 'rook',
-    'r': 'rook',
-    'Q': 'queen',
-    'q': 'queen',
-    'K': 'king',
-    'k': 'king'
+    P: 'pawn',
+    p: 'pawn',
+    N: 'knight',
+    n: 'knight',
+    B: 'bishop',
+    b: 'bishop',
+    R: 'rook',
+    r: 'rook',
+    Q: 'queen',
+    q: 'queen',
+    K: 'king',
+    k: 'king'
+};
 };
 
 
@@ -104,12 +105,12 @@ board.piecesAbbreviation = {
  * @type {Object.<string, Array.<number>>
  */
 board.validMovesTable = {
-    'pawn': new Object(),
-    'knight': new Object(),
-    'bishop': new Object(),
-    'rook': new Object(),
-    'queen': new Object(),
-    'king': new Object()
+    pawn: new Object(),
+    knight: new Object(),
+    bishop: new Object(),
+    rook: new Object(),
+    queen: new Object(),
+    king: new Object()
 };
 
 
@@ -270,11 +271,11 @@ board.setupFromFen = function(fen_string) {
  */
 board.generateValidMovesTable = function() {
     var piece_function = {
-        'knight': board.validKnightMoves,
-        'bishop': board.validBishopMoves,
-        'rook': board.validRookMoves,
-        'queen': board.validQueenMoves,
-        'king': board.validKingMoves
+        knight: board.validKnightMoves,
+        bishop: board.validBishopMoves,
+        rook: board.validRookMoves,
+        queen: board.validQueenMoves,
+        king: board.validKingMoves
     };
     for (var index = 0; index < 0x80; index++) {
         if (board.onBoard(index)) {
