@@ -95,6 +95,22 @@ board.piecesAbbreviation = {
     K: 'king',
     k: 'king'
 };
+
+
+/** Table of move directions deltas.
+ *
+ * @type {Object.<string, number>}
+ * @const
+ */
+board.moveDirectionDelta = {
+    north: 0x10,
+    north_east: 0x11,
+    east: 0x1,
+    south_east: -0xf,
+    south: -0x10,
+    south_west: -0x11,
+    west: -0x1,
+    north_west: 0xf,
 };
 
 
@@ -339,7 +355,12 @@ board.validNotSlidingMoves = function(start, move_deltas) {
  * @return {Array.<number>} The array of all valid destination squares.
  */
 board.validBishopMoves = function(start) {
-    var move_deltas = [17, 15, -17, -15];
+    var move_deltas = [
+        board.moveDirectionDelta.north_west,
+        board.moveDirectionDelta.north_east,
+        board.moveDirectionDelta.south_west,
+        board.moveDirectionDelta.south_east,
+    ];
     return board.validSlidingMoves(start, move_deltas);
 };
 
@@ -352,7 +373,12 @@ board.validBishopMoves = function(start) {
  * @return {Array.<number>} The array of all valid destination squares.
  */
 board.validRookMoves = function(start) {
-    var move_deltas = [16, 1, -16, -1];
+    var move_deltas = [
+        board.moveDirectionDelta.north,
+        board.moveDirectionDelta.south,
+        board.moveDirectionDelta.east,
+        board.moveDirectionDelta.west,
+    ];
     return board.validSlidingMoves(start, move_deltas);
 };
 
@@ -391,7 +417,16 @@ board.validKnightMoves = function(start) {
  * @return {Array.<number>} The array of all valid destination squares.
  */
 board.validKingMoves = function(start) {
-    var move_deltas = [16, 17, 1, -15, -16, -17, -1, 15];
+    var move_deltas = [
+        board.moveDirectionDelta.north,
+        board.moveDirectionDelta.south,
+        board.moveDirectionDelta.east,
+        board.moveDirectionDelta.west,
+        board.moveDirectionDelta.north_west,
+        board.moveDirectionDelta.north_east,
+        board.moveDirectionDelta.south_west,
+        board.moveDirectionDelta.south_east,
+    ];
     return board.validNotSlidingMoves(start, move_deltas);
 };
 
@@ -419,24 +454,35 @@ board.validPawnMoves = function(color, start) {
     var step, diagonals = [];
     var moves = [];
     if (color == 'w') {
-        diagonals = [15, 17];
+        diagonals = [
+            board.moveDirectionDelta.north_west,
+            board.moveDirectionDelta.north_east
+        ];
+        // Cannot capture straight ahead.
         if (board.position.pieces[start + rank_delta] == 0) {
             step = [start + rank_delta];
         }
+        // Can step 2 squares ahead when on 2nd rank.
         if (board.getRank(start) == 1) {
             step = step.concat([start + (rank_delta * 2)]);
         }
     } else {
-        diagonals = [-15, -17];
+        diagonals = [
+            board.moveDirectionDelta.south_west,
+            board.moveDirectionDelta.south_east
+        ];
+        // Cannot capture straight ahead.
         if (board.position.pieces[start - rank_delta] == 0) {
             step = [start - rank_delta];
         }
+        // Can step 2 squares ahead when on 7th rank.
         if (board.getRank(start) == 6) {
             step = step.concat([start - (rank_delta * 2)]);
         }
     }
     for (var delta in diagonals) {
-        if (board.position.pieces[start + diagonals[delta]] != 0) {
+        if ((board.position.pieces[start + diagonals[delta]] != 0) ||
+                (start + diagonals[delta] == board.position.enpassant)) {
             moves.push(start + diagonals[delta]);
         }
     }
