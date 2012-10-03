@@ -72,18 +72,20 @@ ui.drawTrait = function() {
     $('#active_color').attr('class', trait + '_turn');
 };
 
+ui.redrawPosition = function() {
+    ui.resetPieces();
+    ui.drawPieces();
+    ui.drawTrait();
+    ui.dnd.setup();
+};
 /**
  * Redraws the board from the FEN string found in the #fen_string element.
  * @type {function()}
  */
 ui.loadFen = function() {
     var fen_string = document.getElementById('fen_string').value;
-    board.resetPieces();
-    ui.resetPieces();
     board.setupFromFen(fen_string);
-    ui.drawPieces();
-    ui.drawTrait();
-    ui.dnd.setup();
+    ui.redrawPosition();
 };
 
 
@@ -126,10 +128,7 @@ ui.dnd.dropOnSquareHandler = function(event, ui_element) {
     var piece = ui_element.draggable;
     var destination_square = event.target;
     if (ui.dnd.validMove(piece, event.target)) {
-        $(destination_square).empty();
-        $(piece).attr('style', 'position: relative;');
-        $(piece).appendTo(destination_square);
-        ui.drawTrait();
+        ui.redrawPosition();
         return true;
     } else {
         ui_element.position.top = 0;

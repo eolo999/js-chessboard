@@ -246,6 +246,7 @@ board.setupFromFen = function(fen_string) {
     }
 
     function setupPieces(rows_string) {
+        board.resetPieces();
         var rows = rows_string.split('/').reverse();
         for (var row_index = 0; row_index < 8; row_index++) {
             var square = row_index * 0x10;
