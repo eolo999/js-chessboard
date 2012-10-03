@@ -275,7 +275,7 @@ board.setupFromFen = function(fen_string) {
         setupPieces(fen_array[0]);
         setupPosition('trait', fen_array[1]);
         setupPosition('castling', fen_array[2]);
-        setupPosition('enpassant', fen_array[3]);
+        setupPosition('enpassant', board.algebraicToNumber(fen_array[3]));
         setupPosition('halfmove', fen_array[4]);
         setupPosition('fullmove', fen_array[5]);
     }
