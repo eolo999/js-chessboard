@@ -177,9 +177,12 @@ board.getRank = function(square) {
  * @return {string} The square in algebraic notation.
  */
 board.numberToAlgebraic = function(square) {
-    var column = square & 0x7;
-    var rank = board.getRank(square);
-    return board.COLUMNS[column] + (rank + 1);
+    if (board.onBoard(square)) {
+        var column = square & 0x7;
+        var rank = board.getRank(square);
+        return board.COLUMNS[column] + (rank + 1);
+    }
+    return;
 };
 
 
@@ -191,8 +194,14 @@ board.numberToAlgebraic = function(square) {
  * @return {number} The square index in the board array.
  */
 board.algebraicToNumber = function(square) {
-    var column = board.COLUMNS.indexOf(square[0]);
-    var rank = square[1] - 1;
+    var column_char = square[0];
+    var rank_char = square[1];
+    if (board.COLUMNS.indexOf(column_char) == -1 ||
+            rank_char <= 0 || rank_char > 8) {
+                return;
+            }
+    var column = board.COLUMNS.indexOf(column_char);
+    var rank = rank_char - 1;
     return (0x10 * rank) + column;
 };
 
@@ -221,6 +230,7 @@ board.position.toggleTrait = function() {
     } else {
         board.position.trait = 'w';
     }
+    return board.position.trait;
 };
 
 
@@ -519,6 +529,10 @@ board.makeMove = function(start, end) {
         return false;
     }
     var moving_piece_abbr = board.position.pieces[start];
+    // Start square is empty
+    if (moving_piece_abbr == 0) {
+        return false;
+    }
     var moving_piece = board.piecesAbbreviation[moving_piece_abbr];
     var moving_piece_color = board.getPieceColor(moving_piece_abbr);
     // Do not move when it's not your turn
