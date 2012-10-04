@@ -501,6 +501,20 @@ board.validPawnMoves = function(color, start) {
     board.validMovesTable['pawn'][start] = moves;
 };
 
+
+/**
+ * Make moves defining start and end squares in algebraic notation.
+ *
+ * @param {string} start The start square in algebraic notation.
+ * @param {string} end The end square in algebraic notation.
+ * @return {boolean} Wether the move has been done or not.
+ */
+board.makeAlgebraicMove = function(start, end) {
+    return board.makeMove(board.algebraicToNumber(start),
+            board.algebraicToNumber(end));
+};
+
+
 /**
  * Checks if a move is valid.
  *
@@ -553,12 +567,33 @@ board.makeMove = function(start, end) {
     if (moving_piece == 'pawn') {
         board.validPawnMoves(moving_piece_color, start);
     }
+    //
     // Do not move on an unreachable square
     if (board.validMovesTable[moving_piece][start].indexOf(end) == -1) {
         return false;
     }
-    // DO MOVE
+
+    // ======= //
+    // DO MOVE //
+    // ======= //
+
+    // Handle normal and en passant capture
+    board.handleCapture(moving_piece_abbr, captured_piece_abbr, start, end);
+
+    // Set the enpassant square if needed
+    board.setEnPassantSquare(moving_piece_abbr, start, end);
+
+    // Pawn Promotion
+    moving_piece_abbr = board.handlePawnPromotion(moving_piece_abbr, end);
+
     board.position.pieces[start] = 0;
+    board.position.pieces[end] = moving_piece_abbr;
+    board.position.toggleTrait();
+    return true;
+};
+
+
+board.handleCapture =function(moving_piece_abbr, captured_piece_abbr, start, end) {
     if (captured_piece_abbr != 0) {
         board.removeCaptured(end);
     } else {
@@ -567,37 +602,52 @@ board.makeMove = function(start, end) {
             board.moveDirectionDelta.north_east,
             board.moveDirectionDelta.north_west
         ];
-        if (moving_piece == 'pawn' &&
-                diagonals.indexOf(Math.abs(start - end)) != -1) {
-            if (moving_piece_color == 'w') {
+        if (diagonals.indexOf(Math.abs(start - end)) != -1) {
+            if (moving_piece_abbr == 'P') {
                 board.removeCaptured(end + board.moveDirectionDelta.south);
-            } else {
+            }
+            if (moving_piece_abbr == 'p') {
                 board.removeCaptured(end + board.moveDirectionDelta.north);
             }
         }
     }
-    // Set the enpassant square if needed
-    if ((moving_piece == 'pawn') && (Math.abs(start - end) == 0x20)) {
-        if (moving_piece_color == 'w') {
+};
+
+
+/**
+ * If a pawn reaches its last rank it is automatically promoted to Queen.
+ *
+ * TODO: handle user choice.
+ *
+ * @param {string} piece_abbr A piece in algebraic representation.
+ * @return {string} Queen or original piece.
+ */
+board.handlePawnPromotion = function(piece_abbr, end) {
+    if (piece_abbr == 'P' && board.getRank(end) == 7) {
+        return 'Q';
+    }
+    if (piece_abbr == 'p' && board.getRank(end) == 0) {
+        return 'q';
+    }
+    return piece_abbr;
+};
+
+
+/**
+ * Set the en passant square if needed.
+ *
+ * @param {string} piece_abbr The moving piece in algebraic notation.
+ * @start {number} start The starting square number.
+ * @start {number} end The ending square number.
+ */
+board.setEnPassantSquare = function(piece_abbr, start, end) {
+    if (Math.abs(start - end) == 0x20) {
+        if (piece_abbr == 'P') {
             board.position.enpassant = start + 0x10;
-        } else {
+        }
+        if (piece_abbr == 'p') {
             board.position.enpassant = start - 0x10;
         }
     }
-    board.position.pieces[end] = moving_piece_abbr;
-    board.position.toggleTrait();
-    return true;
-};
-
-/**
- * Make moves defining start and end squares in algebraic notation.
- *
- * @param {string} start The start square in algebraic notation.
- * @param {string} end The end square in algebraic notation.
- * @return {boolean} Wether the move has been done or not.
- */
-board.makeAlgebraicMove = function(start, end) {
-    return board.makeMove(board.algebraicToNumber(start),
-            board.algebraicToNumber(end));
 };
 
