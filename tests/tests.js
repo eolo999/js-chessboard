@@ -226,6 +226,16 @@ test('Black Cannot move on unreachable square', function() {
     equal(board.makeAlgebraicMove('e8', 'e6'), false);
 });
 
+test('Set en passant square and capture', function() {
+    ok(board.position.enpassant == 82);
+    ok(board.makeAlgebraicMove('d2', 'd4'));
+    ok(board.position.enpassant == board.algebraicToNumber('d3'));
+    ok(board.makeAlgebraicMove('d7', 'd5'));
+    ok(board.position.enpassant == board.algebraicToNumber('d6'));
+    ok(board.makeAlgebraicMove('e4', 'e5'));
+    ok(board.makeAlgebraicMove('f7', 'f5'));
+    ok(board.position.enpassant == board.algebraicToNumber('f6'));
+    ok(board.makeAlgebraicMove('e5', 'f6'));
 });
 
 module('FEN', {
