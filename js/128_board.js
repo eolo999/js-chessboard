@@ -589,3 +589,15 @@ board.makeMove = function(start, end) {
     return true;
 };
 
+/**
+ * Make moves defining start and end squares in algebraic notation.
+ *
+ * @param {string} start The start square in algebraic notation.
+ * @param {string} end The end square in algebraic notation.
+ * @return {boolean} Wether the move has been done or not.
+ */
+board.makeAlgebraicMove = function(start, end) {
+    return board.makeMove(board.algebraicToNumber(start),
+            board.algebraicToNumber(end));
+};
+

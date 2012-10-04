@@ -130,101 +130,102 @@ module('makeMove', {
 });
 
 test('Start square is empty', function() {
-    equal(board.makeMove(0x30, 0x40), false);
+    equal(board.makeAlgebraicMove('a4', 'a5'), false);
 });
 
 test('Moving piece has not trait', function() {
-    equal(board.makeMove(0x60, 0x40), false);
+    equal(board.makeAlgebraicMove('a7', 'a5'), false);
 });
 
 test('Cannot capture same color pieces', function() {
-    equal(board.makeMove(0x0, 0x10), false);
+    equal(board.makeAlgebraicMove('a1', 'a2'), false);
 });
 
-test('White Cannot move on unreachable square', function() {
+test('White Cannot move on unreachable empty square', function() {
     // white pawn
-    equal(board.makeMove(0x10, 0x40), false);
-    equal(board.makeMove(0x10, 0x21), false);
-    equal(board.makeMove(0x10, 0x35), false);
+    equal(board.makeAlgebraicMove('a2', 'a5'), false);
+    equal(board.makeAlgebraicMove('a2', 'b3'), false);
+    equal(board.makeAlgebraicMove('a2', 'f4'), false);
     // white knight
-    equal(board.makeMove(0x1, 0x21), false);
-    equal(board.makeMove(0x1, 0x31), false);
-    equal(board.makeMove(0x1, 0x50), false);
-    equal(board.makeMove(0x6, 0x26), false);
-    equal(board.makeMove(0x6, 0x24), false);
-    equal(board.makeMove(0x6, 0x51), false);
+    equal(board.makeAlgebraicMove('b1', 'b3'), false);
+    equal(board.makeAlgebraicMove('b1', 'b4'), false);
+    equal(board.makeAlgebraicMove('b1', 'a6'), false);
+    equal(board.makeAlgebraicMove('g1', 'g3'), false);
+    equal(board.makeAlgebraicMove('g1', 'e3'), false);
+    equal(board.makeAlgebraicMove('g1', 'b6'), false);
     // white bishop
-    equal(board.makeMove(0x2, 0x12), false);
-    equal(board.makeMove(0x2, 0x23), false);
-    equal(board.makeMove(0x2, 0x44), false);
-    equal(board.makeMove(0x5, 0x22), false);
-    equal(board.makeMove(0x5, 0x47), false);
-    equal(board.makeMove(0x5, 0x25), false);
+    equal(board.makeAlgebraicMove('c1', 'c2'), false);
+    equal(board.makeAlgebraicMove('c1', 'd3'), false);
+    equal(board.makeAlgebraicMove('c1', 'e5'), false);
+    equal(board.makeAlgebraicMove('f1', 'c3'), false);
+    equal(board.makeAlgebraicMove('f1', 'h5'), false);
+    equal(board.makeAlgebraicMove('f1', 'f3'), false);
     // white rook
-    equal(board.makeMove(0x0, 0x11), false);
-    equal(board.makeMove(0x0, 0x12), false);
-    equal(board.makeMove(0x0, 0x24), false);
-    equal(board.makeMove(0x7, 0x25), false);
-    equal(board.makeMove(0x7, 0x26), false);
-    equal(board.makeMove(0x7, 0x43), false);
+    equal(board.makeAlgebraicMove('a1', 'b2'), false);
+    equal(board.makeAlgebraicMove('a1', 'b3'), false);
+    equal(board.makeAlgebraicMove('a1', 'c4'), false);
+    equal(board.makeAlgebraicMove('h1', 'c5'), false);
+    equal(board.makeAlgebraicMove('h1', 'g6'), false);
+    equal(board.makeAlgebraicMove('h1', 'f5'), false);
     // white queen
-    equal(board.makeMove(0x3, 0x22), false);
-    equal(board.makeMove(0x3, 0x24), false);
-    equal(board.makeMove(0x3, 0x40), false);
-    equal(board.makeMove(0x3, 0x37), false);
-    equal(board.makeMove(0x3, 0x52), false);
-    equal(board.makeMove(0x3, 0x54), false);
+    equal(board.makeAlgebraicMove('d1', 'c3'), false);
+    equal(board.makeAlgebraicMove('d1', 'e3'), false);
+    equal(board.makeAlgebraicMove('d1', 'a5'), false);
+    equal(board.makeAlgebraicMove('d1', 'h4'), false);
+    equal(board.makeAlgebraicMove('d1', 'c6'), false);
+    equal(board.makeAlgebraicMove('d1', 'g6'), false);
     // white king
-    equal(board.makeMove(0x4, 0x22), false);
-    equal(board.makeMove(0x4, 0x24), false);
-    equal(board.makeMove(0x4, 0x40), false);
-    equal(board.makeMove(0x4, 0x37), false);
-    equal(board.makeMove(0x4, 0x52), false);
-    equal(board.makeMove(0x4, 0x54), false);
+    equal(board.makeAlgebraicMove('e1', 'e3'), false);
+    equal(board.makeAlgebraicMove('e1', 'd3'), false);
+    equal(board.makeAlgebraicMove('e1', 'f3'), false);
+    equal(board.makeAlgebraicMove('e1', 'a5'), false);
+    equal(board.makeAlgebraicMove('e1', 'b6'), false);
+    equal(board.makeAlgebraicMove('e1', 'c4'), false);
 });
 
 test('Black Cannot move on unreachable square', function() {
     board.position.toggleTrait();
     // black pawn
-    equal(board.makeMove(0x60, 0x30), false);
-    equal(board.makeMove(0x10, 0x51), false);
-    equal(board.makeMove(0x10, 0x41), false);
+    equal(board.makeAlgebraicMove('a7', 'a4'), false);
+    equal(board.makeAlgebraicMove('a7', 'b6'), false);
+    equal(board.makeAlgebraicMove('a7', 'b6'), false);
     // black knight
-    equal(board.makeMove(0x71, 0x51), false);
-    equal(board.makeMove(0x71, 0x41), false);
-    equal(board.makeMove(0x71, 0x43), false);
-    equal(board.makeMove(0x76, 0x56), false);
-    equal(board.makeMove(0x76, 0x44), false);
-    equal(board.makeMove(0x76, 0x46), false);
+    equal(board.makeAlgebraicMove('b8', 'b6'), false);
+    equal(board.makeAlgebraicMove('b8', 'b5'), false);
+    equal(board.makeAlgebraicMove('b8', 'c5'), false);
+    equal(board.makeAlgebraicMove('g8', 'g6'), false);
+    equal(board.makeAlgebraicMove('g8', 'g5'), false);
+    equal(board.makeAlgebraicMove('g8', 'f5'), false);
     // black bishop
-    equal(board.makeMove(0x72, 0x12), false);
-    equal(board.makeMove(0x72, 0x23), false);
-    equal(board.makeMove(0x72, 0x44), false);
-    equal(board.makeMove(0x75, 0x22), false);
-    equal(board.makeMove(0x75, 0x47), false);
-    equal(board.makeMove(0x75, 0x25), false);
+    equal(board.makeAlgebraicMove('c8', 'c2'), false);
+    equal(board.makeAlgebraicMove('c8', 'd3'), false);
+    equal(board.makeAlgebraicMove('c8', 'e5'), false);
+    equal(board.makeAlgebraicMove('f8', 'c3'), false);
+    equal(board.makeAlgebraicMove('f8', 'h5'), false);
+    equal(board.makeAlgebraicMove('f8', 'f3'), false);
     // black rook
-    equal(board.makeMove(0x70, 0x11), false);
-    equal(board.makeMove(0x70, 0x12), false);
-    equal(board.makeMove(0x70, 0x24), false);
-    equal(board.makeMove(0x77, 0x25), false);
-    equal(board.makeMove(0x77, 0x26), false);
-    equal(board.makeMove(0x77, 0x43), false);
-    equal(board.makeMove(0x77, 0x25), false);
+    equal(board.makeAlgebraicMove('a8', 'b2'), false);
+    equal(board.makeAlgebraicMove('a8', 'c2'), false);
+    equal(board.makeAlgebraicMove('a8', 'e3'), false);
+    equal(board.makeAlgebraicMove('h8', 'f3'), false);
+    equal(board.makeAlgebraicMove('h8', 'g3'), false);
+    equal(board.makeAlgebraicMove('h8', 'd5'), false);
     // black queen
-    equal(board.makeMove(0x73, 0x22), false);
-    equal(board.makeMove(0x73, 0x24), false);
-    equal(board.makeMove(0x73, 0x30), false);
-    equal(board.makeMove(0x73, 0x47), false);
-    equal(board.makeMove(0x73, 0x52), false);
-    equal(board.makeMove(0x73, 0x54), false);
+    equal(board.makeAlgebraicMove('d8', 'c3'), false);
+    equal(board.makeAlgebraicMove('d8', 'e3'), false);
+    equal(board.makeAlgebraicMove('d8', 'a4'), false);
+    equal(board.makeAlgebraicMove('d8', 'h5'), false);
+    equal(board.makeAlgebraicMove('d8', 'c6'), false);
+    equal(board.makeAlgebraicMove('d8', 'e6'), false);
     // black king
-    equal(board.makeMove(0x74, 0x22), false);
-    equal(board.makeMove(0x74, 0x24), false);
-    equal(board.makeMove(0x74, 0x40), false);
-    equal(board.makeMove(0x74, 0x37), false);
-    equal(board.makeMove(0x74, 0x52), false);
-    equal(board.makeMove(0x74, 0x54), false);
+    equal(board.makeAlgebraicMove('e8', 'c3'), false);
+    equal(board.makeAlgebraicMove('e8', 'e3'), false);
+    equal(board.makeAlgebraicMove('e8', 'a5'), false);
+    equal(board.makeAlgebraicMove('e8', 'h4'), false);
+    equal(board.makeAlgebraicMove('e8', 'c6'), false);
+    equal(board.makeAlgebraicMove('e8', 'e6'), false);
+});
+
 });
 
 module('FEN', {
