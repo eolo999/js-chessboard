@@ -16,7 +16,7 @@ var board = new Object();
  * @type {Object}
  */
 board.position = new Object();
-
+board.position.castling = new Object();
 
 /**
  * Creates an array of 128 zeroes.
@@ -273,6 +273,21 @@ board.setupFromFen = function(fen_string) {
         }
     }
 
+    function setupCastling(castling_string) {
+        var white = '';
+        var black = '';
+        for (var index = 0; index < castling_string.length; index++) {
+            var letter = castling_string[index];
+            if (letter == letter.toUpperCase()) {
+                white += letter.toLowerCase();
+            } else {
+                black += letter;
+            }
+        }
+        board.position.castling.w = white;
+        board.position.castling.b = black;
+    }
+
     function setupPosition(attribute, value) {
         board.position[attribute] = value;
     }
@@ -284,7 +299,7 @@ board.setupFromFen = function(fen_string) {
         var fen_array = fen_string.split(' ');
         setupPieces(fen_array[0]);
         setupPosition('trait', fen_array[1]);
-        setupPosition('castling', fen_array[2]);
+        setupCastling(fen_array[2]);
         setupPosition('enpassant', board.algebraicToNumber(fen_array[3]));
         setupPosition('halfmove', fen_array[4]);
         setupPosition('fullmove', fen_array[5]);
@@ -567,7 +582,18 @@ board.makeMove = function(start, end) {
     if (moving_piece == 'pawn') {
         board.validPawnMoves(moving_piece_color, start);
     }
-    //
+
+    // Castling
+    var castling;
+    if (moving_piece_abbr.toUpperCase() == 'K') {
+        castling = board.handleCastling(moving_piece_abbr, moving_piece_color, start, end);
+    }
+    if (castling) {
+        board.position.castling[moving_piece_color] = '';
+        board.position.toggleTrait();
+        return true;
+    }
+
     // Do not move on an unreachable square
     if (board.validMovesTable[moving_piece][start].indexOf(end) == -1) {
         return false;
@@ -583,6 +609,9 @@ board.makeMove = function(start, end) {
     // Set the enpassant square if needed
     board.setEnPassantSquare(moving_piece_abbr, start, end);
 
+    // Set castling capabilities
+    board.setCastling(moving_piece_abbr, start);
+
     // Pawn Promotion
     moving_piece_abbr = board.handlePawnPromotion(moving_piece_abbr, end);
 
@@ -593,6 +622,99 @@ board.makeMove = function(start, end) {
 };
 
 
+board.setCastling = function(piece, start) {
+    if (piece == 'K') {
+        board.position.castling['w'] = '';
+    }
+    if (piece == 'k') {
+        board.position.castling['b'] = '';
+    }
+    if (piece == 'R' && start == 0) {
+        board.position.castling['w'] = board.position.castling['w'].replace('q', '');
+    }
+    if (piece == 'R' && start == 7) {
+        board.position.castling['w'] = board.position.castling['w'].replace('k', '');
+    }
+    if (piece == 'r' && start == 0x70) {
+        board.position.castling['b'] = board.position.castling['b'].replace('q', '');
+    }
+    if (piece == 'r' && start == 0x77) {
+        board.position.castling['b'] = board.position.castling['b'].replace('k', '');
+    }
+};
+
+
+/**
+ * Performs castlings
+ */
+board.handleCastling = function(piece, color, start, end) {
+    function castleKingSide(start, end) {
+        board.position.pieces[start] = 0;
+        board.position.pieces[end] = piece;
+        if (color == 'w') {
+            board.position.pieces[7] = 0;
+            board.position.pieces[5] = 'R';
+        } else {
+            board.position.pieces[0x77] = 0;
+            board.position.pieces[0x75] = 'r';
+        }
+    }
+
+    function castleQueenSide(start, end) {
+        board.position.pieces[start] = 0;
+        board.position.pieces[end] = piece;
+        if (color == 'w') {
+            board.position.pieces[0] = 0;
+            board.position.pieces[3] = 'R';
+        } else {
+            board.position.pieces[0x70] = 0;
+            board.position.pieces[0x73] = 'r';
+        }
+    }
+
+    var castling_capabilities = board.position.castling[color];
+    if (start - end == 2 && castling_capabilities.indexOf('q') != -1) {
+        if (color == 'w' &&
+                board.position.pieces[1] == 0 &&
+                board.position.pieces[2] == 0 &&
+                board.position.pieces[3] == 0 ) {
+                    castleQueenSide(start, end);
+                    return true;
+        }
+        if (color == 'b' &&
+                board.position.pieces[0x71] == 0 &&
+                board.position.pieces[0x72] == 0 &&
+                board.position.pieces[0x73] == 0 ) {
+                    castleQueenSide(start, end);
+                    return true;
+        }
+    }
+    if (start - end == -2 && castling_capabilities.indexOf('k') != -1) {
+        if (color == 'w' &&
+                board.position.pieces[5] == 0 &&
+                board.position.pieces[6] == 0 ) {
+                    castleKingSide(start, end);
+                    return true;
+        }
+        if (color == 'b' &&
+                board.position.pieces[0x75] == 0 &&
+                board.position.pieces[0x76] == 0 ) {
+                    castleKingSide(start, end);
+                    return true;
+        }
+    }
+    return false;
+};
+
+
+/**
+ * Handle normal and en passant captures.
+ *
+ * @param {string} moving_piece_abbr The moving piece in algebraic representation.
+ * @param {string} captured_piece_abbr The captured piece in algebraic representation.
+ * @param {number} start The starting square number.
+ * @param {number} end The ending square number.
+ */
 board.handleCapture =function(moving_piece_abbr, captured_piece_abbr, start, end) {
     if (captured_piece_abbr != 0) {
         board.removeCaptured(end);
@@ -637,8 +759,8 @@ board.handlePawnPromotion = function(piece_abbr, end) {
  * Set the en passant square if needed.
  *
  * @param {string} piece_abbr The moving piece in algebraic notation.
- * @start {number} start The starting square number.
- * @start {number} end The ending square number.
+ * @param {number} start The starting square number.
+ * @param {number} end The ending square number.
  */
 board.setEnPassantSquare = function(piece_abbr, start, end) {
     if (Math.abs(start - end) == 0x20) {
