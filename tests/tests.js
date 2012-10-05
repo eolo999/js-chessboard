@@ -256,3 +256,71 @@ test('Set en passant square from FEN string', function() {
     ok(board.position.enpassant == 82);
 });
 
+module('Castling', {
+    setup: function() {
+        board.setupFromFen('r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
+    }
+});
+
+test('Valid King side castling', function() {
+    ok(board.makeAlgebraicMove('e1', 'g1'));
+    ok(board.position.pieces[board.algebraicToNumber('g1')] == 'K');
+    ok(board.position.pieces[board.algebraicToNumber('f1')] == 'R');
+    ok(board.makeAlgebraicMove('e8', 'g8'));
+    ok(board.position.pieces[board.algebraicToNumber('g8')] == 'k');
+    ok(board.position.pieces[board.algebraicToNumber('f8')] == 'r');
+});
+
+test('Invalid King side castling', function() {
+    // Move bishops back on their respective 1st rank
+    board.makeAlgebraicMove('c4', 'f1');
+    board.makeAlgebraicMove('c6', 'f8');
+    // White: Castle King side
+    equal(board.makeAlgebraicMove('e1', 'g1'), false);
+    // Give the trait to black
+    board.position.toggleTrait();
+    // Black: Castle King side
+    equal(board.makeAlgebraicMove('e8', 'g8'), false);
+});
+
+test('Valid Queen side castling', function() {
+    ok(board.makeAlgebraicMove('e1', 'c1'));
+    ok(board.position.pieces[board.algebraicToNumber('c1')] == 'K');
+    ok(board.position.pieces[board.algebraicToNumber('d1')] == 'R');
+    ok(board.makeAlgebraicMove('e8', 'c8'));
+    ok(board.position.pieces[board.algebraicToNumber('c8')] == 'k');
+    ok(board.position.pieces[board.algebraicToNumber('d8')] == 'r');
+});
+
+test('Invalid Queen side castling', function() {
+    // Move queens back on their respective 1st rank
+    board.makeAlgebraicMove('f3', 'd1');
+    board.makeAlgebraicMove('c6', 'd8');
+    // White: Castle King side
+    equal(board.makeAlgebraicMove('e1', 'c1'), false);
+    // Give the trait to black
+    board.position.toggleTrait();
+    // Black: Castle King side
+    equal(board.makeAlgebraicMove('e8', 'c8'), false);
+});
+
+test('Remove all castling capabilities on king\'s move', function() {
+    board.makeAlgebraicMove('e1', 'f1');
+    equal(board.position.castling.w, '');
+    board.makeAlgebraicMove('e8', 'f8');
+    equal(board.position.castling.b, '');
+});
+
+test('Remove King side castling capability on K-Rook move', function() {
+    board.makeAlgebraicMove('h1', 'g1');
+    equal(board.position.castling.w, 'q');
+    board.makeAlgebraicMove('h8', 'g8');
+    equal(board.position.castling.b, 'q');
+});
+
+test('Remove Queen side castling capability on Q-Rook move', function() {
+    board.makeAlgebraicMove('a1', 'b1');
+    equal(board.position.castling.w, 'k');
+    board.makeAlgebraicMove('a8', 'b8');
+    equal(board.position.castling.b, 'k');
+});
