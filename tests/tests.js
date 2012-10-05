@@ -246,14 +246,60 @@ test('Set en passant square and capture', function() {
     ok(board.makeAlgebraicMove('e5', 'f6'));
 });
 
-module('FEN', {
-    setup: function() {
-        board.setupFromFen('rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
-    }
+test('White Bishop cannot go after obstacles', function() {
+    board.setupFromFen('6k1/8/2p1p3/3B4/2P1P3/8/8/6K1 w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'b7'), false);
+    equal(board.makeAlgebraicMove('d5', 'f7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b3'), false);
+    equal(board.makeAlgebraicMove('d5', 'f3'), false);
 });
 
-test('Set en passant square from FEN string', function() {
-    ok(board.position.enpassant == 82);
+test('Black Bishop cannot go after obstacles', function() {
+    board.setupFromFen('6k1/8/2p1p3/3b4/2P1P3/8/8/6K1 w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'b7'), false);
+    equal(board.makeAlgebraicMove('d5', 'f7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b3'), false);
+    equal(board.makeAlgebraicMove('d5', 'f3'), false);
+});
+
+test('White Rook cannot go after obstacles', function() {
+    board.setupFromFen('7k/8/3p4/2PRp3/3P4/8/8/7K w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'd3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b5'), false);
+    equal(board.makeAlgebraicMove('d5', 'f5'), false);
+});
+
+test('Black Rook cannot go after obstacles', function() {
+    board.setupFromFen('7k/8/3p4/2Prp3/3P4/8/8/7K w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'd3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b5'), false);
+    equal(board.makeAlgebraicMove('d5', 'f5'), false);
+});
+
+test('White Queen cannot go after obstacles', function() {
+    board.setupFromFen('7k/8/2ppp3/2pQP3/2PPP3/8/8/7K w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'b7'), false);
+    equal(board.makeAlgebraicMove('d5', 'f7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b3'), false);
+    equal(board.makeAlgebraicMove('d5', 'f3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b5'), false);
+    equal(board.makeAlgebraicMove('d5', 'f5'), false);
+});
+
+test('Black Queen cannot go after obstacles', function() {
+    board.setupFromFen('7k/8/2ppp3/2pqP3/2PPP3/8/8/7K w - - 0 1');
+    equal(board.makeAlgebraicMove('d5', 'b7'), false);
+    equal(board.makeAlgebraicMove('d5', 'f7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b3'), false);
+    equal(board.makeAlgebraicMove('d5', 'f3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd3'), false);
+    equal(board.makeAlgebraicMove('d5', 'd7'), false);
+    equal(board.makeAlgebraicMove('d5', 'b5'), false);
+    equal(board.makeAlgebraicMove('d5', 'f5'), false);
 });
 
 module('Castling', {
