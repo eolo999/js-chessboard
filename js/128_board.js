@@ -600,6 +600,11 @@ board.makeMove = function(start, end) {
         return false;
     }
 
+    // Sliding pieces cannot go after an obstacle
+    if (board.hasObstacles(moving_piece_abbr, start, end)) {
+        return false;
+    }
+
     // ======= //
     // DO MOVE //
     // ======= //
@@ -620,6 +625,67 @@ board.makeMove = function(start, end) {
     board.position.pieces[end] = moving_piece_abbr;
     board.position.toggleTrait();
     return true;
+};
+
+
+board.hasObstacles = function(piece, start, end) {
+    function hasRookObstacles(start, end) {
+        var delta = start - end;
+        if (delta % 0x10 == 0) {
+            var direction = 0x10
+        } else {
+            var direction = 0x1;
+        }
+        var distance = delta / direction;
+        for (var index = 1; index < Math.abs(distance); index ++) {
+            if (distance < 0) {
+                var square = start + (index * direction);
+            } else {
+                var square = start + (index * -direction);
+            }
+            if (board.position.pieces[square] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function hasBishopObstacles(start, end) {
+        var delta = start - end;
+        if (delta % 0x11 == 0) {
+            var direction = 0x11
+        } else {
+            var direction = 0xf
+        }
+        var distance = delta / direction;
+        for (var index = 1; index < Math.abs(distance); index ++) {
+            if (distance < 0) {
+                var square = start + (index * direction);
+            } else {
+                var square = start + (index * -direction);
+            }
+            if (board.position.pieces[square] != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    if (piece.toUpperCase() == 'R') {
+        return hasRookObstacles(start, end);
+    }
+    if (piece.toUpperCase() == 'B') {
+        return hasBishopObstacles(start, end);
+    }
+    if (piece.toUpperCase() == 'Q') {
+        var delta = start - end;
+        if (delta % 0x11 == 0 || delta % 0xf == 0) {
+            return hasBishopObstacles(start, end);
+        } else {
+            return hasRookObstacles(start, end);
+        }
+    }
+    return false;
 };
 
 
