@@ -477,7 +477,8 @@ board.validKingMoves = function(start) {
  */
 board.validPawnMoves = function(color, start) {
     var rank_delta = 0x10;
-    var step, diagonals = [];
+    var step = [];
+    var diagonals = [];
     var moves = [];
     if (color == 'w') {
         diagonals = [
@@ -487,10 +488,12 @@ board.validPawnMoves = function(color, start) {
         // Cannot capture straight ahead.
         if (board.position.pieces[start + rank_delta] == 0) {
             step = [start + rank_delta];
-        }
-        // Can step 2 squares ahead when on 2nd rank.
-        if (board.getRank(start) == 1) {
-            step = step.concat([start + (rank_delta * 2)]);
+            // Can step 2 squares ahead when on 2nd rank.
+            if (board.getRank(start) == 1) {
+                if (board.position.pieces[start + (rank_delta * 2)] == 0) {
+                    step = step.concat([start + (rank_delta * 2)]);
+                }
+            }
         }
     } else {
         diagonals = [
@@ -500,10 +503,12 @@ board.validPawnMoves = function(color, start) {
         // Cannot capture straight ahead.
         if (board.position.pieces[start - rank_delta] == 0) {
             step = [start - rank_delta];
-        }
-        // Can step 2 squares ahead when on 7th rank.
-        if (board.getRank(start) == 6) {
-            step = step.concat([start - (rank_delta * 2)]);
+            // Can step 2 squares ahead when on 7th rank.
+            if (board.getRank(start) == 6) {
+                if (board.position.pieces[start - (rank_delta * 2)] == 0) {
+                    step = step.concat([start - (rank_delta * 2)]);
+                }
+            }
         }
     }
     for (var delta in diagonals) {
