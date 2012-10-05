@@ -546,7 +546,7 @@ board.makeAlgebraicMove = function(start, end) {
  * 4) Pawn valid moves change depending on context.
  * 5) Cannot move on unreachable square for a given piece.
  * 6) Pawns can capture en passant.
- * 7) King can castle. (TODO)
+ * 7) King can castle.
  * 8) All pieces except Knights cannot jump over obstacles. (TODO)
  * 9) Must remove check if King is under attack. (TODO)
  * 10) Cannot move pinned pieces. (TODO)
@@ -589,11 +589,7 @@ board.makeMove = function(start, end) {
     }
 
     // Castling
-    var castling;
-    if (moving_piece_abbr.toUpperCase() == 'K') {
-        castling = board.handleCastling(moving_piece_abbr, moving_piece_color, start, end);
-    }
-    if (castling) {
+    if (board.handleCastling(moving_piece_abbr, moving_piece_color, start, end)) {
         board.position.castling[moving_piece_color] = '';
         board.position.toggleTrait();
         return true;
@@ -653,6 +649,10 @@ board.setCastling = function(piece, start) {
  * Performs castlings
  */
 board.handleCastling = function(piece, color, start, end) {
+    if (piece.toUpperCase() != 'K') {
+        return false;
+    }
+
     function castleKingSide(start, end) {
         board.position.pieces[start] = 0;
         board.position.pieces[end] = piece;
