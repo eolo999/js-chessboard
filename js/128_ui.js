@@ -23,7 +23,7 @@ ui.drawBoard = function() {
             }
             var color = board.COLORS[square];
             var td = document.createElement('td');
-            td.setAttribute('id', square);
+            td.setAttribute('id', 'square_' + square);
             td.setAttribute('class', 'droppable square ' + board.COLOR[color]);
             tr.appendChild(td);
             square_counter += 1;
@@ -41,7 +41,7 @@ ui.drawBoard = function() {
 ui.resetPieces = function() {
     for (var square = 0; square < 0x80; square++) {
         if (board.onBoard(square)) {
-            var square_node = document.getElementById(square + '');
+            var square_node = document.getElementById('square_' + square);
             square_node.innerHTML = '';
         }
     }
@@ -57,7 +57,7 @@ ui.drawPieces = function() {
         if (board.onBoard(square)) {
             var piece = board.position.pieces[square];
             if (piece != 0) {
-                var square_node = document.getElementById(square + '');
+                var square_node = document.getElementById('square_' + square);
                 var div = document.createElement('div');
                 div.setAttribute('class', 'draggable piece ' + piece);
                 square_node.appendChild(div);
@@ -112,7 +112,8 @@ ui.dnd.setup = function() {
 
 
 ui.dnd.getSquare = function(node) {
-    return $(node).attr('id');
+    var square_id = $(node).attr('id');
+    return square_id.substr(7);
 };
 
 ui.dnd.validMove = function(piece, destination) {
