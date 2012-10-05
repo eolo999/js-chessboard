@@ -141,6 +141,14 @@ test('Cannot capture same color pieces', function() {
     equal(board.makeAlgebraicMove('a1', 'a2'), false);
 });
 
+// this test will fail when implementing 'checks'
+test('Cannot capture King', function() {
+    ok(board.makeAlgebraicMove('e4', 'e5'));
+    ok(board.makeAlgebraicMove('d8', 'a5'));
+    ok(board.makeAlgebraicMove('d2', 'd3'));
+    equal(board.makeAlgebraicMove('a5', 'e1'), false);
+});
+
 test('White Cannot move on unreachable empty square', function() {
     // white pawn
     equal(board.makeAlgebraicMove('a2', 'a5'), false);
@@ -183,7 +191,7 @@ test('White Cannot move on unreachable empty square', function() {
     equal(board.makeAlgebraicMove('e1', 'c4'), false);
 });
 
-test('Black Cannot move on unreachable square', function() {
+test('Black Cannot move on unreachable empty square', function() {
     board.position.toggleTrait();
     // black pawn
     equal(board.makeAlgebraicMove('a7', 'a4'), false);
@@ -247,3 +255,4 @@ module('FEN', {
 test('Set en passant square from FEN string', function() {
     ok(board.position.enpassant == 82);
 });
+
