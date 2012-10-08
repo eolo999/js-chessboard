@@ -122,6 +122,43 @@ test('removeCaptured', function() {
 });
 
 
+module('King Checks', {
+    setup: function() {
+        board.generateValidMovesTable();
+    }
+});
+
+test('Not under check', function() {
+    board.setupFromFen('rnbqkbnr/pppp1ppp/8/4p3/3P4/4P3/PPP2PPP/RNBQKBNR w KQkq - 0 1');
+    equal(board.isUnderCheck('w'), false);
+    board.makeAlgebraicMove('f2', 'f3');
+    equal(board.isUnderCheck('w'), false);
+    board.makeAlgebraicMove('d6', 'd5');
+    equal(board.isUnderCheck('w'), false);
+});
+
+test('Under bishop check', function() {
+    board.setupFromFen('rnbqkbnr/ppp2ppp/3p4/1B2p3/3P4/4P3/PPP2PPP/RNBQK1NR b KQkq - 0 1');
+    equal(board.isUnderCheck('b'), true);
+});
+
+test('Under queen check', function() {
+    board.setupFromFen('rnb1kbnr/pp2qppp/2pp4/1B6/3P4/8/PPP2PPP/RNBQK1NR w KQkq - 0 1');
+    equal(board.isUnderCheck('w'), true);
+});
+
+test('Under pawn check', function() {
+    board.setupFromFen('4k3/3P4/8/8/8/8/8/7K b - - 0 1');
+    equal(board.isUnderCheck('b'), true);
+});
+
+module('hasObstacles', {
+    setup: function() {
+        board.generateValidMovesTable();
+        board.setupFromFen('rnbqkbnr/pppp1ppp/8/4p3/3P4/4P3/PPP2PPP/RNBQKBNR w KQkq - 0 1');
+    }
+});
+
 module('makeMove', {
     setup: function() {
         board.generateValidMovesTable();

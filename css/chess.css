@@ -88,4 +88,10 @@ table.board {
 [move=invalid] {
   background-color: #f00;
 }
-
+.check {
+  background-color: #f00;
+  border-radius: 10px / 10px;
+  border: solid 1px #000;
+  width: 10px;
+  height: 10px;
+}

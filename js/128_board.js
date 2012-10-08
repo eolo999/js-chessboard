@@ -557,6 +557,7 @@ board.makeAlgebraicMove = function(start, end) {
  * @return {boolean} Wether the move has been done or not.
  */
 board.makeMove = function(start, end) {
+    var restore_board = board.position;
     start = parseInt(start, 10);
     end = parseInt(end, 10);
     if (start == end) {
@@ -608,7 +609,6 @@ board.makeMove = function(start, end) {
     // ======= //
     // DO MOVE //
     // ======= //
-
     // Handle normal and en passant capture
     board.handleCapture(moving_piece_abbr, captured_piece_abbr, start, end);
 
@@ -620,9 +620,13 @@ board.makeMove = function(start, end) {
 
     // Pawn Promotion
     moving_piece_abbr = board.handlePawnPromotion(moving_piece_abbr, end);
-
     board.position.pieces[start] = 0;
     board.position.pieces[end] = moving_piece_abbr;
+    if (board.isUnderCheck(moving_piece_color)) {
+        board.position = restore_board;
+        return false;
+    }
+
     board.position.toggleTrait();
     return true;
 };
@@ -630,11 +634,12 @@ board.makeMove = function(start, end) {
 
 board.hasObstacles = function(piece, start, end) {
     function hasRookObstacles(start, end) {
+        var direction;
         var delta = start - end;
         if (delta % 0x10 == 0) {
-            var direction = 0x10
+            direction = 0x10;
         } else {
-            var direction = 0x1;
+            direction = 0x1;
         }
         var distance = delta / direction;
         for (var index = 1; index < Math.abs(distance); index ++) {
@@ -652,10 +657,11 @@ board.hasObstacles = function(piece, start, end) {
 
     function hasBishopObstacles(start, end) {
         var delta = start - end;
+        var direction;
         if (delta % 0x11 == 0) {
-            var direction = 0x11
+            direction = 0x11;
         } else {
-            var direction = 0xf
+            direction = 0xf;
         }
         var distance = delta / direction;
         for (var index = 1; index < Math.abs(distance); index ++) {
@@ -671,6 +677,7 @@ board.hasObstacles = function(piece, start, end) {
         return false;
     }
 
+    var piece_name = board.piecesAbbreviation[piece];
     if (piece.toUpperCase() == 'R') {
         return hasRookObstacles(start, end);
     }
@@ -834,6 +841,9 @@ board.handlePawnPromotion = function(piece_abbr, end) {
  * @param {number} end The ending square number.
  */
 board.setEnPassantSquare = function(piece_abbr, start, end) {
+    if ('Pp'.indexOf(piece_abbr) == -1) {
+        board.position.enpassant = '-';
+    }
     if (Math.abs(start - end) == 0x20) {
         if (piece_abbr == 'P') {
             board.position.enpassant = start + 0x10;
@@ -843,4 +853,58 @@ board.setEnPassantSquare = function(piece_abbr, start, end) {
         }
     }
 };
+
+
+board.getKingPosition = function(color) {
+    if (color == 'w') {
+        var king = 'K';
+    } else {
+        var king = 'k';
+    }
+    for (var index = 0; index < 0x80; index++) {
+        if (board.position.pieces[index] == king) {
+            var king_position = index;
+        }
+    }
+    return king_position;
+};
+
+
+board.isUnderCheck = function(color) {
+    var king_position = board.getKingPosition(color);
+    // Sliding pieces
+    var starting_squares = board.validMovesTable.queen[king_position];
+    for (var index = 0; index < starting_squares.length; index++) {
+        var start = starting_squares[index];
+        var piece = board.position.pieces[start];
+        if (
+                // There is a piece on the square
+                (piece != 0)
+                // The piece is one among Queen, Rook and Bishop
+                && ('QBRqbr'.indexOf(piece) != -1)
+                // The piece is not of the same color of the king
+                && (board.getPieceColor(piece) != color)
+                && (board.validMovesTable[board.piecesAbbreviation[piece]][start].indexOf(king_position) != -1)
+                // The piece has no obstacles
+                && (!board.hasObstacles(piece, start, king_position))
+                ) {
+                    return true;
+        }
+    }
+    // Knights
+    var starting_knight_squares = board.validMovesTable.knight[king_position];
+    for (var index = 0; index < starting_knight_squares.length; index++) {
+        var start = starting_knight_squares[index];
+        var piece = board.position.pieces[start];
+        if (piece != 0 
+                && ('Nn'.indexOf(piece) != -1)
+                && (board.getPieceColor(piece) != color)) {
+                    return true;
+        }
+    }
+    // pawn checks
+    // TODO
+    return false;
+};
+
 

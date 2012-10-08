@@ -66,6 +66,14 @@ ui.drawPieces = function() {
     }
 };
 
+ui.drawCheck = function() {
+    var trait = board.position.trait;
+    if (board.isUnderCheck(trait)) {
+    $('#under_check').attr('class', 'check');
+    } else {
+    $('#under_check').attr('class', '');
+    }
+};
 
 ui.drawTrait = function() {
     var trait = board.position.trait;
@@ -80,6 +88,7 @@ ui.redrawPosition = function() {
     ui.resetPieces();
     ui.drawPieces();
     ui.drawTrait();
+    ui.drawCheck();
     ui.dnd.setup();
 };
 
