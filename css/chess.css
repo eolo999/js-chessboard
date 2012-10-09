@@ -95,3 +95,8 @@ table.board {
   width: 10px;
   height: 10px;
 }
+
+
+#game_info {
+    float: right;
+}

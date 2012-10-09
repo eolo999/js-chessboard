@@ -547,7 +547,7 @@ board.makeAlgebraicMove = function(start, end) {
  * 5) Cannot move on unreachable square for a given piece.
  * 6) Pawns can capture en passant.
  * 7) King can castle.
- * 8) All pieces except Knights cannot jump over obstacles. (TODO)
+ * 8) All pieces except Knights cannot jump over obstacles.
  * 9) Must remove check if King is under attack. (TODO)
  * 10) Cannot move pinned pieces. (TODO)
  * 11) Handle pawn promotions. (TODO)
@@ -557,7 +557,10 @@ board.makeAlgebraicMove = function(start, end) {
  * @return {boolean} Wether the move has been done or not.
  */
 board.makeMove = function(start, end) {
-    var restore_board = board.position;
+    // Deep copy board.position object to restore it if move leaves moving
+    // color king under check
+    var restore_board = jQuery.extend(true, {}, board.position);
+
     start = parseInt(start, 10);
     end = parseInt(end, 10);
     if (start == end) {
@@ -609,6 +612,7 @@ board.makeMove = function(start, end) {
     // ======= //
     // DO MOVE //
     // ======= //
+
     // Handle normal and en passant capture
     board.handleCapture(moving_piece_abbr, captured_piece_abbr, start, end);
 
@@ -622,8 +626,11 @@ board.makeMove = function(start, end) {
     moving_piece_abbr = board.handlePawnPromotion(moving_piece_abbr, end);
     board.position.pieces[start] = 0;
     board.position.pieces[end] = moving_piece_abbr;
+
+    // Restore board as it was before the mess because king has been left under
+    // check
     if (board.isUnderCheck(moving_piece_color)) {
-        board.position = restore_board;
+        board.position = jQuery.extend(true, {}, restore_board);
         return false;
     }
 
@@ -851,6 +858,8 @@ board.setEnPassantSquare = function(piece_abbr, start, end) {
         if (piece_abbr == 'p') {
             board.position.enpassant = start - 0x10;
         }
+    } else {
+        board.position.enpassant = '-';
     }
 };
 

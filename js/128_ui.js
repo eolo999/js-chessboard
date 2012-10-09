@@ -81,6 +81,20 @@ ui.drawTrait = function() {
 };
 
 
+ui.drawCastling = function() {
+    var castling = board.position.castling.w.toUpperCase() + board.position.castling.b;
+    $('#castling').text(castling);
+};
+
+ui.drawEnPassant = function() {
+    if (board.position.enpassant == '-') {
+        $('#en_passant').text('-');
+    } else {
+        $('#en_passant').text(board.numberToAlgebraic(board.position.enpassant));
+    }
+};
+
+
 /**
  * Redraws the Pieces on the board.
  */
@@ -89,6 +103,8 @@ ui.redrawPosition = function() {
     ui.drawPieces();
     ui.drawTrait();
     ui.drawCheck();
+    ui.drawCastling();
+    ui.drawEnPassant();
     ui.dnd.setup();
 };
 
