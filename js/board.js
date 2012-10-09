@@ -297,10 +297,14 @@ board.setupFromFen = function(fen_string) {
     }
     if (validateFEN(fen_string)) {
         var fen_array = fen_string.split(' ');
+        var enpassant = fen_array[3];
+        if (enpassant != '-') {
+            enpassant = board.algebraicToNumber(enpassant);
+        }
         setupPieces(fen_array[0]);
         setupPosition('trait', fen_array[1]);
         setupCastling(fen_array[2]);
-        setupPosition('enpassant', board.algebraicToNumber(fen_array[3]));
+        setupPosition('enpassant', enpassant);
         setupPosition('halfmove', fen_array[4]);
         setupPosition('fullmove', fen_array[5]);
     }
