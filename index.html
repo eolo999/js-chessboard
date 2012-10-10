@@ -37,16 +37,9 @@
                     FEN: <input id="fen_string" type="text" name="fen" />
                     <input type="submit" value="Load FEN" onclick="ui.loadFen(); return false;"/>
                 </form>
-                <table>
-                    <tr class="info_title">
-                        <td>Castling</td><td>Check</td><td>En passant</td>
-                    </tr>
-                    <tr>
-                        <td id="castling">KQkq</td>
-                        <td id="under_check"></td>
-                        <td id="en_passant"></td>
-                    </tr>
-                </table>
+                <div id="castling">KQkq</div>
+                <div id="under_check"></div>
+                <div id="en_passant"></div>
             </div>
             <div id="trait" class="white"></div>
             <div id="board"></div>

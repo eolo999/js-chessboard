@@ -81,7 +81,7 @@ ui.drawTrait = function() {
     if (trait == 'w') {
         $('#trait').css('margin-top', '342px')
     } else {
-        $('#trait').css('margin-top', '22px')
+        $('#trait').css('margin-top', '20px')
     }
 };
 
