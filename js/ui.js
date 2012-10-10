@@ -77,7 +77,12 @@ ui.drawCheck = function() {
 
 ui.drawTrait = function() {
     var trait = board.position.trait;
-    $('#active_color').attr('class', trait + '_turn');
+    $('#trait').attr('class', trait);
+    if (trait == 'w') {
+        $('#trait').css('margin-top', '342px')
+    } else {
+        $('#trait').css('margin-top', '22px')
+    }
 };
 
 
