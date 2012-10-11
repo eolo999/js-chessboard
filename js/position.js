@@ -228,6 +228,7 @@ var boardPosition = {
                     moving_piece_color, start, end)) {
             temp_position.castling[moving_piece_color] = '';
             temp_position.toggleTrait();
+            temp_position.incrementFullMove(moving_piece_color);
             jQuery.extend(true, this, temp_position);
             return true;
         }
@@ -271,9 +272,18 @@ var boardPosition = {
         }
 
         temp_position.toggleTrait();
+        temp_position.incrementFullMove(moving_piece_color);
+
         // Everything fine: merge temp_position into the actual position.
         jQuery.extend(true, this, temp_position);
+
         return true;
+    },
+
+    incrementFullMove: function(color) {
+        if (color === 'b') {
+            this.fullmove = parseInt(this.fullmove) + 1;
+        }
     },
 
     /**

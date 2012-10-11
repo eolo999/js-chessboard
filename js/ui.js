@@ -91,6 +91,11 @@ ui.drawCastling = function(position) {
     $('#castling').text(castling);
 };
 
+ui.drawFullMove = function(position) {
+    var fullmove = position.fullmove;
+    $('#fullmove').text(fullmove);
+};
+
 ui.drawEnPassant = function(position) {
     if (position.enpassant == '-') {
         $('#en_passant').text('-');
@@ -106,6 +111,7 @@ ui.drawEnPassant = function(position) {
 ui.redrawPosition = function(position) {
     ui.resetPieces();
     ui.drawPieces(position);
+    ui.drawFullMove(position);
     ui.drawTrait(position);
     ui.drawCheck(position);
     ui.drawCastling(position);
