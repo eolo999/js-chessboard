@@ -128,9 +128,7 @@ ui.loadFen = function() {
     var fen_string = document.getElementById('fen_string').value;
     var position = Object.create(boardPosition);
     position.setupFromFen(fen_string);
-    console.log(position);
     ui.redrawPosition(position);
-    console.log('done');
 };
 
 
