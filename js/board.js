@@ -331,3 +331,120 @@ board.validKingMoves = function(start) {
     return board.validNotSlidingMoves(start, move_deltas);
 };
 
+board.validateFEN = function(fen_string) {
+    function validatePiecesPosition(pieces_position) {
+        var ranks = pieces_position.split('/');
+        // eigth fields one per rank separated by a '/'
+        if (ranks.length != 8) {
+            return false;
+        }
+
+        for (var i = 0; i < ranks.length; i++) {
+            var sum_fields = 0;
+            var previous_was_number = false;
+
+            for (var k = 0; k < ranks[i].length; k++) {
+                if (!isNaN(ranks[i][k])) {
+                    if (previous_was_number) {
+                        return false;
+                    }
+                    sum_fields += parseInt(ranks[i][k]);
+                    previous_was_number = true;
+                } else {
+                    if (!/^[prnbqkPRNBQK]$/.test(ranks[i][k])) {
+                        return false;
+                    }
+                    sum_fields += 1;
+                    previous_was_number = false;
+                }
+            }
+            if (sum_fields != 8) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function validateActiveColor(active_color) {
+        if (active_color == 'w' || active_color == 'b') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function validateCastling(castling) {
+        if (!(/^(K?Q?k?q?|-)$/.test(castling) && (castling.length > 0))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function validateEnPassant(enpassant) {
+        if (!/^(-|[abcdefgh][36])$/.test(enpassant)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function validateHalfmoveClock(halfmove_clock) {
+        if (isNaN(halfmove_clock) || (parseInt(halfmove_clock, 10) < 0)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function validateFullmoveNumber(fullmove_number) {
+        if (isNaN(fullmove_number) || (parseInt(fullmove_number, 10) <= 0)) {
+            return {valid: false, error_number: 2, error: errors[2]};
+        } else {
+            return true;
+        }
+    }
+
+    var fen = fen_string.split(/\s+/);
+    if (fen.length != 6) {
+        alert("FEN is more than 6 fields");
+        return false;
+    }
+
+    var pieces_position = fen[0];
+    if (!validatePiecesPosition(pieces_position)) {
+        alert("FEN has wrong piece positions");
+        return false;
+    }
+
+    var active_color = fen[1];
+    if (!validateActiveColor(active_color)) {
+        alert("FEN has wrong active color field");
+        return false;
+    }
+
+    var castling = fen[2];
+    if (!validateCastling(castling)) {
+        alert("FEN has wrong castling field");
+        return false;
+    }
+    var enpassant = fen[3];
+    if (!validateEnPassant(enpassant)) {
+        alert("FEN has wrong enpassant field");
+        return false;
+    }
+
+    var halfmove_clock = fen[4];
+    if (!validateHalfmoveClock(halfmove_clock)) {
+        alert("FEN has wrong halfmove clock field");
+        return false;
+    }
+
+    var fullmove_number = fen[5];
+    if (!validateFullmoveNumber(fullmove_number)) {
+        alert("FEN has wrong fullmove field");
+        return false;
+    }
+    return true;
+};
+

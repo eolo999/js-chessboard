@@ -31,10 +31,6 @@ var boardPosition = {
 
         this.resetPieces();
 
-        function validateFEN() {
-            return true;
-        }
-
         function setupPieces(position, rows_string) {
             var row_index,
                 index,
@@ -82,7 +78,7 @@ var boardPosition = {
             this.fen = fen_string;
         }
 
-        if (validateFEN(this.fen)) {
+        if (board.validateFEN(this.fen)) {
             fen_array = this.fen.split(' ');
             enpassant = fen_array[3];
             if (enpassant !== '-') {
