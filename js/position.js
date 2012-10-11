@@ -46,7 +46,7 @@ var boardPosition = {
             }
         }
 
-        function setupCastling(castling_string) {
+        function setupCastling(position, castling_string) {
             var white = '';
             var black = '';
             for (var index = 0; index < castling_string.length; index++) {
@@ -57,8 +57,8 @@ var boardPosition = {
                     black += letter;
                 }
             }
-            this.castling.w = white;
-            this.castling.b = black;
+            position.castling.w = white;
+            position.castling.b = black;
         }
 
         function setupPosition(position, attribute, value) {
@@ -73,7 +73,7 @@ var boardPosition = {
             }
             setupPieces(this, fen_array[0]);
             setupPosition(this, 'trait', fen_array[1]);
-            setupCastling(fen_array[2]);
+            setupCastling(this, fen_array[2]);
             setupPosition(this, 'enpassant', enpassant);
             setupPosition(this, 'halfmove', fen_array[4]);
             setupPosition(this, 'fullmove', fen_array[5]);
@@ -160,7 +160,8 @@ var boardPosition = {
      * @return {boolean} Wether the move has been done or not.
      */
     makeMove: function(start, end) {
-        var temp_position = Object.create(this);
+        var temp_position = {};
+        jQuery.extend(true, temp_position, this);
 
         start = parseInt(start, 10);
         end = parseInt(end, 10);
@@ -225,7 +226,7 @@ var boardPosition = {
         temp_position.setCastling(moving_piece_abbr, start);
 
         // Pawn Promotion
-        // moving_piece_abbr = board.handlePawnPromotion(moving_piece_abbr, end);
+        moving_piece_abbr = temp_position.handlePawnPromotion(moving_piece_abbr, end);
 
         temp_position.pieces[start] = 0;
         temp_position.pieces[end] = moving_piece_abbr;
@@ -233,7 +234,6 @@ var boardPosition = {
         // Restore board as it was before the mess because king has been left under
         // check
         if (temp_position.isUnderCheck(moving_piece_color)) {
-            delete temp_position;
             return false;
         }
 
@@ -447,6 +447,23 @@ var boardPosition = {
             }
         }
         return king_position;
+    },
+    /**
+     * If a pawn reaches its last rank it is automatically promoted to Queen.
+     *
+     * TODO: handle user choice.
+     *
+     * @param {string} piece_abbr A piece in algebraic representation.
+     * @return {string} Queen or original piece.
+     */
+    handlePawnPromotion: function(piece_abbr, end) {
+        if (piece_abbr == 'P' && board.getRank(end) == 7) {
+            return 'Q';
+        }
+        if (piece_abbr == 'p' && board.getRank(end) == 0) {
+            return 'q';
+        }
+        return piece_abbr;
     },
 
     isUnderCheck: function(color) {
