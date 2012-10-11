@@ -23,11 +23,12 @@ var boardPosition = {
         this.pieces[square] = 0;
     },
 
-    setupFromFen: function() {
+    setupFromFen: function(fen_string) {
         var fen_array,
             enpassant;
 
         this.resetPieces();
+
         function validateFEN(fen) {
             return true;
         }
@@ -73,6 +74,10 @@ var boardPosition = {
 
         function setupPosition(position, attribute, value) {
             position[attribute] = value;
+        }
+
+        if (fen_string) {
+            this.fen = fen_string;
         }
 
         if (validateFEN(this.fen)) {
