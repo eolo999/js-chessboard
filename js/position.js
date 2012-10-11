@@ -12,7 +12,7 @@ var boardPosition = {
     },
 
     toggleTrait: function () {
-        if (this.trait == 'w') {
+        if (this.trait === 'w') {
             this.trait = 'b';
         } else {
             this.trait = 'w';
@@ -24,18 +24,25 @@ var boardPosition = {
     },
 
     setupFromFen: function() {
+        var fen_array,
+            enpassant;
+
         this.resetPieces();
         function validateFEN(fen) {
             return true;
         }
 
         function setupPieces(position, rows_string) {
-            var rows = rows_string.split('/').reverse();
-            for (var row_index = 0; row_index < 8; row_index++) {
-                var square = row_index * 0x10;
-                for (var index = 0;
-                        index < rows[row_index].length; index++) {
-                    var letter = rows[row_index][index];
+            var row_index,
+                index,
+                square,
+                letter,
+                rows = rows_string.split('/').reverse();
+
+            for (row_index = 0; row_index < 8; row_index += 1) {
+                square = row_index * 0x10;
+                for (index = 0; index < rows[row_index].length; index += 1) {
+                    letter = rows[row_index][index];
                     if (isNaN(letter)) {
                         position.pieces[square] = letter;
                         square += 1;
@@ -47,11 +54,14 @@ var boardPosition = {
         }
 
         function setupCastling(position, castling_string) {
-            var white = '';
-            var black = '';
-            for (var index = 0; index < castling_string.length; index++) {
-                var letter = castling_string[index];
-                if (letter == letter.toUpperCase()) {
+            var index,
+                letter,
+                black = '',
+                white = '';
+
+            for (index = 0; index < castling_string.length; index += 1) {
+                letter = castling_string[index];
+                if (letter === letter.toUpperCase()) {
                     white += letter.toLowerCase();
                 } else {
                     black += letter;
@@ -66,9 +76,9 @@ var boardPosition = {
         }
 
         if (validateFEN(this.fen)) {
-            var fen_array = this.fen.split(' ');
-            var enpassant = fen_array[3];
-            if (enpassant != '-') {
+            fen_array = this.fen.split(' ');
+            enpassant = fen_array[3];
+            if (enpassant !== '-') {
                 enpassant = board.algebraicToNumber(enpassant);
             }
             setupPieces(this, fen_array[0]);
@@ -81,17 +91,19 @@ var boardPosition = {
     },
 
     validPawnMoves: function(color, start) {
-        var rank_delta = 0x10;
-        var step = [];
-        var diagonals = [];
-        var moves = [];
-        if (color == 'w') {
+        var rank_delta = 0x10,
+            step = [],
+            diagonals = [],
+            moves = [],
+            delta;
+
+        if (color === 'w') {
             diagonals = [
                 board.moveDirectionDelta.north_west,
                 board.moveDirectionDelta.north_east
             ];
             // Cannot capture straight ahead.
-            if (this.pieces[start + rank_delta] == 0) {
+            if (this.pieces[start + rank_delta] === 0) {
                 step = [start + rank_delta];
                 // Can step 2 squares ahead when on 2nd rank.
                 if (board.getRank(start) === 1) {
@@ -106,24 +118,24 @@ var boardPosition = {
                 board.moveDirectionDelta.south_east
             ];
             // Cannot capture straight ahead.
-            if (this.pieces[start - rank_delta] == 0) {
+            if (this.pieces[start - rank_delta] === 0) {
                 step = [start - rank_delta];
                 // Can step 2 squares ahead when on 7th rank.
-                if (board.getRank(start) == 6) {
-                    if (this.pieces[start - (rank_delta * 2)] == 0) {
+                if (board.getRank(start) === 6) {
+                    if (this.pieces[start - (rank_delta * 2)] === 0) {
                         step = step.concat([start - (rank_delta * 2)]);
                     }
                 }
             }
         }
-        for (var delta in diagonals) {
-            if ((this.pieces[start + diagonals[delta]] != 0) ||
+        for (delta = 0; delta < diagonals.length; delta += 1) {
+            if ((this.pieces[start + diagonals[delta]] !== 0) ||
                     (start + diagonals[delta] === this.enpassant)) {
                 moves.push(start + diagonals[delta]);
             }
         }
         moves = moves.concat(step);
-        this.validMovesTable['pawn'][start] = moves;
+        this.validMovesTable.pawn[start] = moves;
         return moves;
     },
     /**
@@ -160,26 +172,35 @@ var boardPosition = {
      * @return {boolean} Wether the move has been done or not.
      */
     makeMove: function(start, end) {
-        var temp_position = {};
+        var temp_position,
+            moving_piece_abbr,
+            moving_piece,
+            moving_piece_color,
+            captured_piece_abbr;
+
+        // Deep copy the position to revert in case of a move leaving the king
+        // under check.
+        temp_position = {};
         jQuery.extend(true, temp_position, this);
 
         start = parseInt(start, 10);
         end = parseInt(end, 10);
-        if (start == end) {
+
+        if (start === end) {
             return false;
         }
-        var moving_piece_abbr = temp_position.pieces[start];
+        moving_piece_abbr = temp_position.pieces[start];
         // Start square is empty
-        if (moving_piece_abbr == 0) {
+        if (moving_piece_abbr === 0) {
             return false;
         }
-        var moving_piece = board.piecesAbbreviation[moving_piece_abbr];
-        var moving_piece_color = board.getPieceColor(moving_piece_abbr);
+        moving_piece = board.piecesAbbreviation[moving_piece_abbr];
+        moving_piece_color = board.getPieceColor(moving_piece_abbr);
         // Do not move when it's not your turn
-        if (moving_piece_color != temp_position.trait) {
+        if (moving_piece_color !== temp_position.trait) {
             return false;
         }
-        var captured_piece_abbr = temp_position.pieces[end];
+        captured_piece_abbr = temp_position.pieces[end];
         // Do not capture same color pieces
         if (captured_piece_abbr !== 0 &&
                 board.getPieceColor(captured_piece_abbr) === moving_piece_color) {
@@ -203,7 +224,7 @@ var boardPosition = {
         }
 
         // Do not move on an unreachable square
-        if (temp_position.validMovesTable[moving_piece][start].indexOf(end) == -1) {
+        if (temp_position.validMovesTable[moving_piece][start].indexOf(end) === -1) {
             return false;
         }
 
@@ -238,8 +259,8 @@ var boardPosition = {
         }
 
         temp_position.toggleTrait();
+        // Everything fine: merge temp_position into the actual position.
         jQuery.extend(true, this, temp_position);
-        // TODO: Apply changes to this based on temp_position
         return true;
     },
 
@@ -247,14 +268,16 @@ var boardPosition = {
      * Performs castlings
      */
     handleCastling: function(piece, color, start, end) {
-        if (piece.toUpperCase() != 'K') {
+        var castling_capabilities;
+
+        if (piece.toUpperCase() !== 'K') {
             return false;
         }
 
         function castleKingSide(position, start, end) {
             position.pieces[start] = 0;
             position.pieces[end] = piece;
-            if (color == 'w') {
+            if (color === 'w') {
                 position.pieces[7] = 0;
                 position.pieces[5] = 'R';
             } else {
@@ -266,7 +289,7 @@ var boardPosition = {
         function castleQueenSide(position, start, end) {
             position.pieces[start] = 0;
             position.pieces[end] = piece;
-            if (color == 'w') {
+            if (color === 'w') {
                 position.pieces[0] = 0;
                 position.pieces[3] = 'R';
             } else {
@@ -275,57 +298,64 @@ var boardPosition = {
             }
         }
 
-        var castling_capabilities = this.castling[color];
-        if (start - end == 2 && castling_capabilities.indexOf('q') != -1) {
-            if (color == 'w' &&
-                    this.pieces[1] == 0 &&
-                    this.pieces[2] == 0 &&
-                    this.pieces[3] == 0 ) {
-                        castleQueenSide(this, start, end);
-                        return true;
+        castling_capabilities = this.castling[color];
+        if (start - end === 2 && castling_capabilities.indexOf('q') !== -1) {
+            if (color === 'w' &&
+                    this.pieces[1] === 0 &&
+                    this.pieces[2] === 0 &&
+                    this.pieces[3] === 0) {
+                castleQueenSide(this, start, end);
+                return true;
             }
-            if (color == 'b' &&
-                    this.pieces[0x71] == 0 &&
-                    this.pieces[0x72] == 0 &&
-                    this.pieces[0x73] == 0 ) {
-                        castleQueenSide(this, start, end);
-                        return true;
+            if (color === 'b' &&
+                    this.pieces[0x71] === 0 &&
+                    this.pieces[0x72] === 0 &&
+                    this.pieces[0x73] === 0) {
+                castleQueenSide(this, start, end);
+                return true;
             }
         }
-        if (start - end == -2 && castling_capabilities.indexOf('k') != -1) {
-            if (color == 'w' &&
-                    this.pieces[5] == 0 &&
-                    this.pieces[6] == 0 ) {
-                        castleKingSide(this, start, end);
-                        return true;
+        if (start - end === -2 && castling_capabilities.indexOf('k') !== -1) {
+            if (color === 'w' &&
+                    this.pieces[5] === 0 &&
+                    this.pieces[6] === 0) {
+                castleKingSide(this, start, end);
+                return true;
             }
-            if (color == 'b' &&
-                    this.pieces[0x75] == 0 &&
-                    this.pieces[0x76] == 0 ) {
-                        castleKingSide(this, start, end);
-                        return true;
+            if (color === 'b' &&
+                    this.pieces[0x75] === 0 &&
+                    this.pieces[0x76] === 0) {
+                castleKingSide(this, start, end);
+                return true;
             }
         }
         return false;
     },
 
     hasObstacles: function(piece, start, end) {
+        var piece_name,
+            delta;
+
         function hasRookObstacles(position, start, end) {
-            var direction;
-            var delta = start - end;
-            if (delta % 0x10 == 0) {
+            var direction,
+                distance,
+                index,
+                square,
+                delta = start - end;
+
+            if (delta % 0x10 === 0) {
                 direction = 0x10;
             } else {
                 direction = 0x1;
             }
-            var distance = delta / direction;
-            for (var index = 1; index < Math.abs(distance); index ++) {
+            distance = delta / direction;
+            for (index = 1; index < Math.abs(distance); index += 1) {
                 if (distance < 0) {
-                    var square = start + (index * direction);
+                    square = start + (index * direction);
                 } else {
-                    var square = start + (index * -direction);
+                    square = start + (index * -direction);
                 }
-                if (position.pieces[square] != 0) {
+                if (position.pieces[square] !== 0) {
                     return true;
                 }
             }
@@ -333,41 +363,44 @@ var boardPosition = {
         }
 
         function hasBishopObstacles(position, start, end) {
-            var delta = start - end;
-            var direction;
-            if (delta % 0x11 == 0) {
+            var direction,
+                distance,
+                index,
+                square,
+                delta = start - end;
+
+            if (delta % 0x11 === 0) {
                 direction = 0x11;
             } else {
                 direction = 0xf;
             }
-            var distance = delta / direction;
-            for (var index = 1; index < Math.abs(distance); index ++) {
+            distance = delta / direction;
+            for (index = 1; index < Math.abs(distance); index += 1) {
                 if (distance < 0) {
-                    var square = start + (index * direction);
+                    square = start + (index * direction);
                 } else {
-                    var square = start + (index * -direction);
+                    square = start + (index * -direction);
                 }
-                if (position.pieces[square] != 0) {
+                if (position.pieces[square] !== 0) {
                     return true;
                 }
             }
             return false;
         }
 
-        var piece_name = board.piecesAbbreviation[piece];
-        if (piece.toUpperCase() == 'R') {
+        piece_name = board.piecesAbbreviation[piece];
+        if (piece.toUpperCase() === 'R') {
             return hasRookObstacles(this, start, end);
         }
-        if (piece.toUpperCase() == 'B') {
+        if (piece.toUpperCase() === 'B') {
             return hasBishopObstacles(this, start, end);
         }
-        if (piece.toUpperCase() == 'Q') {
-            var delta = start - end;
-            if (delta % 0x11 == 0 || delta % 0xf == 0) {
+        if (piece.toUpperCase() === 'Q') {
+            delta = start - end;
+            if (delta % 0x11 === 0 || delta % 0xf === 0) {
                 return hasBishopObstacles(this, start, end);
-            } else {
-                return hasRookObstacles(this, start, end);
             }
+            return hasRookObstacles(this, start, end);
         }
         return false;
     },
@@ -381,19 +414,21 @@ var boardPosition = {
      * @param {number} end The ending square number.
      */
     handleCapture: function(moving_piece_abbr, captured_piece_abbr, start, end) {
-        if (captured_piece_abbr != 0) {
+        var diagonals;
+
+        if (captured_piece_abbr !== 0) {
             this.removeCaptured(end);
         } else {
             // En passant capture
-            var diagonals = [
+            diagonals = [
                 board.moveDirectionDelta.north_east,
                 board.moveDirectionDelta.north_west
             ];
-            if (diagonals.indexOf(Math.abs(start - end)) != -1) {
-                if (moving_piece_abbr == 'P') {
+            if (diagonals.indexOf(Math.abs(start - end)) !== -1) {
+                if (moving_piece_abbr === 'P') {
                     this.removeCaptured(end + board.moveDirectionDelta.south);
                 }
-                if (moving_piece_abbr == 'p') {
+                if (moving_piece_abbr === 'p') {
                     this.removeCaptured(end + board.moveDirectionDelta.north);
                 }
             }
@@ -401,14 +436,14 @@ var boardPosition = {
     },
 
     setEnPassantSquare: function(piece_abbr, start, end) {
-        if ('Pp'.indexOf(piece_abbr) == -1) {
+        if ('Pp'.indexOf(piece_abbr) === -1) {
             this.enpassant = '-';
         }
-        if (Math.abs(start - end) == 0x20) {
-            if (piece_abbr == 'P') {
+        if (Math.abs(start - end) === 0x20) {
+            if (piece_abbr === 'P') {
                 this.enpassant = start + 0x10;
             }
-            if (piece_abbr == 'p') {
+            if (piece_abbr === 'p') {
                 this.enpassant = start - 0x10;
             }
         } else {
@@ -416,34 +451,38 @@ var boardPosition = {
         }
     },
     setCastling: function(piece, start) {
-        if (piece == 'K') {
-            this.castling['w'] = '';
+        if (piece === 'K') {
+            this.castling.w = '';
         }
-        if (piece == 'k') {
-            this.castling['b'] = '';
+        if (piece === 'k') {
+            this.castling.b = '';
         }
-        if (piece == 'R' && start == 0) {
-            this.castling['w'] = this.castling['w'].replace('q', '');
+        if (piece === 'R' && start === 0) {
+            this.castling.w = this.castling.w.replace('q', '');
         }
-        if (piece == 'R' && start == 7) {
-            this.castling['w'] = this.castling['w'].replace('k', '');
+        if (piece === 'R' && start === 7) {
+            this.castling.w = this.castling.w.replace('k', '');
         }
-        if (piece == 'r' && start == 0x70) {
-            this.castling['b'] = this.castling['b'].replace('q', '');
+        if (piece === 'r' && start === 0x70) {
+            this.castling.b = this.castling.b.replace('q', '');
         }
-        if (piece == 'r' && start == 0x77) {
-            this.castling['b'] = this.castling['b'].replace('k', '');
+        if (piece === 'r' && start === 0x77) {
+            this.castling.b = this.castling.b.replace('k', '');
         }
     },
     getKingPosition: function(color) {
-        if (color == 'w') {
-            var king = 'K';
+        var king,
+            index,
+            king_position;
+
+        if (color === 'w') {
+            king = 'K';
         } else {
-            var king = 'k';
+            king = 'k';
         }
-        for (var index = 0; index < 0x80; index++) {
+        for (index = 0; index < 0x80; index += 1) {
             if (this.pieces[index] === king) {
-                var king_position = index;
+                king_position = index;
             }
         }
         return king_position;
@@ -457,45 +496,52 @@ var boardPosition = {
      * @return {string} Queen or original piece.
      */
     handlePawnPromotion: function(piece_abbr, end) {
-        if (piece_abbr == 'P' && board.getRank(end) == 7) {
+        if (piece_abbr === 'P' && board.getRank(end) === 7) {
             return 'Q';
         }
-        if (piece_abbr == 'p' && board.getRank(end) == 0) {
+        if (piece_abbr === 'p' && board.getRank(end) === 0) {
             return 'q';
         }
         return piece_abbr;
     },
 
     isUnderCheck: function(color) {
-        var king_position = this.getKingPosition(color);
+        var king_position,
+            index,
+            start,
+            piece,
+            starting_squares,
+            starting_knight_squares;
+
+        king_position = this.getKingPosition(color);
         // Sliding pieces
-        var starting_squares = this.validMovesTable.queen[king_position];
-        for (var index = 0; index < starting_squares.length; index++) {
-            var start = starting_squares[index];
-            var piece = this.pieces[start];
+        starting_squares = this.validMovesTable.queen[king_position];
+        for (index = 0; index < starting_squares.length; index += 1) {
+            start = starting_squares[index];
+            piece = this.pieces[start];
             if (
-                    // There is a piece on the square
-                    (piece != 0)
+                // There is a piece on the square
+                (piece !== 0)
                     // The piece is one among Queen, Rook and Bishop
-                    && ('QBRqbr'.indexOf(piece) != -1)
+                    && ('QBRqbr'.indexOf(piece) !== -1)
                     // The piece is not of the same color of the king
-                    && (board.getPieceColor(piece) != color)
-                    && (this.validMovesTable[board.piecesAbbreviation[piece]][start].indexOf(king_position) != -1)
+                    && (board.getPieceColor(piece) !== color)
+                    && (this.validMovesTable[board.piecesAbbreviation[piece]][start].indexOf(king_position) !== -1)
                     // The piece has no obstacles
                     && (!this.hasObstacles(piece, start, king_position))
-                    ) {
-                        return true;
+            ) {
+                return true;
             }
         }
         // Knights
-        var starting_knight_squares = this.validMovesTable.knight[king_position];
-        for (var index = 0; index < starting_knight_squares.length; index++) {
-            var start = starting_knight_squares[index];
-            var piece = this.pieces[start];
-            if (piece != 0 
-                    && ('Nn'.indexOf(piece) != -1)
-                    && (board.getPieceColor(piece) != color)) {
-                        return true;
+        starting_knight_squares = this.validMovesTable.knight[king_position];
+        for (index = 0; index < starting_knight_squares.length; index += 1) {
+            start = starting_knight_squares[index];
+            piece = this.pieces[start];
+            if (piece !== 0
+                    && ('Nn'.indexOf(piece) !== -1)
+                    && (board.getPieceColor(piece) !== color)) {
+                return true;
             }
         }
         // pawn checks
