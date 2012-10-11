@@ -1,3 +1,5 @@
+/*global board, jQuery*/
+
 var boardPosition = {
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     validMovesTable: board.generateValidMovesTable(),
@@ -11,7 +13,7 @@ var boardPosition = {
         this.pieces = board.initZerosArray();
     },
 
-    toggleTrait: function () {
+    toggleTrait: function() {
         if (this.trait === 'w') {
             this.trait = 'b';
         } else {
@@ -29,7 +31,7 @@ var boardPosition = {
 
         this.resetPieces();
 
-        function validateFEN(fen) {
+        function validateFEN() {
             return true;
         }
 
@@ -208,7 +210,8 @@ var boardPosition = {
         captured_piece_abbr = temp_position.pieces[end];
         // Do not capture same color pieces
         if (captured_piece_abbr !== 0 &&
-                board.getPieceColor(captured_piece_abbr) === moving_piece_color) {
+                board.getPieceColor(captured_piece_abbr) ===
+                moving_piece_color) {
             return false;
         }
         // Cannot capture king
@@ -221,7 +224,8 @@ var boardPosition = {
         }
 
         // Castling
-        if (temp_position.handleCastling(moving_piece_abbr, moving_piece_color, start, end)) {
+        if (temp_position.handleCastling(moving_piece_abbr,
+                    moving_piece_color, start, end)) {
             temp_position.castling[moving_piece_color] = '';
             temp_position.toggleTrait();
             jQuery.extend(true, this, temp_position);
@@ -229,7 +233,8 @@ var boardPosition = {
         }
 
         // Do not move on an unreachable square
-        if (temp_position.validMovesTable[moving_piece][start].indexOf(end) === -1) {
+        if (temp_position.validMovesTable[moving_piece][start]
+                .indexOf(end) === -1) {
             return false;
         }
 
@@ -243,7 +248,8 @@ var boardPosition = {
         // ======= //
 
         // Handle normal and en passant capture
-        temp_position.handleCapture(moving_piece_abbr, captured_piece_abbr, start, end);
+        temp_position.handleCapture(moving_piece_abbr,
+                captured_piece_abbr, start, end);
 
         // Set the enpassant square if needed
         temp_position.setEnPassantSquare(moving_piece_abbr, start, end);
@@ -252,13 +258,14 @@ var boardPosition = {
         temp_position.setCastling(moving_piece_abbr, start);
 
         // Pawn Promotion
-        moving_piece_abbr = temp_position.handlePawnPromotion(moving_piece_abbr, end);
+        moving_piece_abbr =
+            temp_position.handlePawnPromotion(moving_piece_abbr, end);
 
         temp_position.pieces[start] = 0;
         temp_position.pieces[end] = moving_piece_abbr;
 
-        // Restore board as it was before the mess because king has been left under
-        // check
+        // Restore board as it was before the mess because king has been left
+        // under check
         if (temp_position.isUnderCheck(moving_piece_color)) {
             return false;
         }
@@ -410,15 +417,15 @@ var boardPosition = {
         return false;
     },
 
-    /**
-     * Handle normal and en passant captures.
+    /** Handle normal and en passant captures.
      *
-     * @param {string} moving_piece_abbr The moving piece in algebraic representation.
-     * @param {string} captured_piece_abbr The captured piece in algebraic representation.
-     * @param {number} start The starting square number.
-     * @param {number} end The ending square number.
+     * @param {string} moving_piece_abbr The moving piece in algebraic
+     * representation.  @param {string} captured_piece_abbr The captured piece
+     * in algebraic representation.  @param {number} start The starting square
+     * number.  @param {number} end The ending square number.
      */
-    handleCapture: function(moving_piece_abbr, captured_piece_abbr, start, end) {
+    handleCapture: function(moving_piece_abbr, captured_piece_abbr,
+                           start, end) {
         var diagonals;
 
         if (captured_piece_abbr !== 0) {
@@ -515,6 +522,7 @@ var boardPosition = {
             index,
             start,
             piece,
+            piece_name,
             starting_squares,
             starting_knight_squares;
 
@@ -524,16 +532,18 @@ var boardPosition = {
         for (index = 0; index < starting_squares.length; index += 1) {
             start = starting_squares[index];
             piece = this.pieces[start];
+            piece_name = board.piecesAbbreviation[piece];
             if (
                 // There is a piece on the square
-                (piece !== 0)
+                (piece !== 0) &&
                     // The piece is one among Queen, Rook and Bishop
-                    && ('QBRqbr'.indexOf(piece) !== -1)
+                    ('QBRqbr'.indexOf(piece) !== -1) &&
                     // The piece is not of the same color of the king
-                    && (board.getPieceColor(piece) !== color)
-                    && (this.validMovesTable[board.piecesAbbreviation[piece]][start].indexOf(king_position) !== -1)
+                    (board.getPieceColor(piece) !== color) &&
+                    (this.validMovesTable[piece_name][start]
+                     .indexOf(king_position) !== -1) &&
                     // The piece has no obstacles
-                    && (!this.hasObstacles(piece, start, king_position))
+                    (!this.hasObstacles(piece, start, king_position))
             ) {
                 return true;
             }
@@ -543,9 +553,9 @@ var boardPosition = {
         for (index = 0; index < starting_knight_squares.length; index += 1) {
             start = starting_knight_squares[index];
             piece = this.pieces[start];
-            if (piece !== 0
-                    && ('Nn'.indexOf(piece) !== -1)
-                    && (board.getPieceColor(piece) !== color)) {
+            if (piece !== 0 &&
+                    ('Nn'.indexOf(piece) !== -1) &&
+                    (board.getPieceColor(piece) !== color)) {
                 return true;
             }
         }
@@ -554,5 +564,4 @@ var boardPosition = {
         return false;
     }
 };
-
 
