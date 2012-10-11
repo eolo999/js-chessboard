@@ -1,20 +1,5 @@
 var debugging_object;
-var board = new Object();
-
-
-/**
- * Stores the actual position on the board.
- *
- * Attributes:
- *   1) pieces
- *   2) trait
- *   3) castling capabilities
- *   4) enpassant
- *   5) halfmove
- *   6) fullmove
- *
- * @type {Object}
- */
+var board = {};
 board.position = new Object();
 board.position.castling = new Object();
 
@@ -331,6 +316,7 @@ board.generateValidMovesTable = function() {
             }
         }
     }
+    return board.validMovesTable;
 };
 
 
