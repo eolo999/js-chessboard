@@ -7,13 +7,14 @@
         <script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.24.custom.min.js"></script>
         <script type="text/javascript" src="/js/board.js"></script>
+        <script type="text/javascript" src="/js/position.js"></script>
         <script type="text/javascript" src="/js/ui.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                board.generateValidMovesTable();
-                board.setupFromFen();
+                var position = Object.create(boardPosition);
+                position.setupFromFen();
                 ui.drawBoard();
-                ui.redrawPosition();
+                ui.redrawPosition(position);
             });
         </script>
         <script type="text/javascript">

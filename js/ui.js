@@ -52,10 +52,10 @@ ui.resetPieces = function() {
  * to the proper square element.
  * @type {function()}
  */
-ui.drawPieces = function() {
+ui.drawPieces = function(position) {
     for (var square = 0; square < 0x80; square++) {
         if (board.onBoard(square)) {
-            var piece = board.position.pieces[square];
+            var piece = position.pieces[square];
             if (piece != 0) {
                 var square_node = document.getElementById('square_' + square);
                 var div = document.createElement('div');
@@ -66,17 +66,17 @@ ui.drawPieces = function() {
     }
 };
 
-ui.drawCheck = function() {
-    var trait = board.position.trait;
-    if (board.isUnderCheck(trait)) {
+ui.drawCheck = function(position) {
+    var trait = position.trait;
+    if (position.isUnderCheck(trait)) {
     $('#under_check').attr('class', 'check');
     } else {
     $('#under_check').attr('class', '');
     }
 };
 
-ui.drawTrait = function() {
-    var trait = board.position.trait;
+ui.drawTrait = function(position) {
+    var trait = position.trait;
     $('#trait').attr('class', trait);
     if (trait == 'w') {
         $('#trait').css('margin-top', '342px')
@@ -86,16 +86,16 @@ ui.drawTrait = function() {
 };
 
 
-ui.drawCastling = function() {
-    var castling = board.position.castling.w.toUpperCase() + board.position.castling.b;
+ui.drawCastling = function(position) {
+    var castling = position.castling.w.toUpperCase() + position.castling.b;
     $('#castling').text(castling);
 };
 
-ui.drawEnPassant = function() {
-    if (board.position.enpassant == '-') {
+ui.drawEnPassant = function(position) {
+    if (position.enpassant == '-') {
         $('#en_passant').text('-');
     } else {
-        $('#en_passant').text(board.numberToAlgebraic(board.position.enpassant));
+        $('#en_passant').text(board.numberToAlgebraic(position.enpassant));
     }
 };
 
@@ -103,14 +103,14 @@ ui.drawEnPassant = function() {
 /**
  * Redraws the Pieces on the board.
  */
-ui.redrawPosition = function() {
+ui.redrawPosition = function(position) {
     ui.resetPieces();
-    ui.drawPieces();
-    ui.drawTrait();
-    ui.drawCheck();
-    ui.drawCastling();
-    ui.drawEnPassant();
-    ui.dnd.setup();
+    ui.drawPieces(position);
+    ui.drawTrait(position);
+    ui.drawCheck(position);
+    ui.drawCastling(position);
+    ui.drawEnPassant(position);
+    ui.dnd.setup(position);
 };
 
 
@@ -125,7 +125,7 @@ ui.loadFen = function() {
 };
 
 
-ui.dnd.setup = function() {
+ui.dnd.setup = function(position) {
     $('.draggable').draggable({
         containment: $('.board'),
         helper: 'original',
@@ -135,9 +135,10 @@ ui.dnd.setup = function() {
         }
     );
     $('.droppable').droppable({
-        drop: ui.dnd.dropOnSquareHandler
+        drop: function (event, ui_element) {
+            ui.dnd.dropOnSquareHandler(event, ui_element, position);
         }
-    );
+    });
 };
 
 
@@ -146,10 +147,10 @@ ui.dnd.getSquare = function(node) {
     return square_id.substr(7);
 };
 
-ui.dnd.validMove = function(piece, destination) {
+ui.dnd.validMove = function(piece, destination, position) {
     var source_square = ui.dnd.getSquare(piece.parent());
     var end_square = parseInt(ui.dnd.getSquare(destination));
-    return board.makeMove(source_square, end_square);
+    return position.makeMove(source_square, end_square);
 };
 
 /**
@@ -161,11 +162,11 @@ ui.dnd.validMove = function(piece, destination) {
  * positioning info from inline css when a valid drop occurs and reset position
  * attributes in the draggable object to revert on invalid drops.
  */
-ui.dnd.dropOnSquareHandler = function(event, ui_element) {
+ui.dnd.dropOnSquareHandler = function(event, ui_element, position) {
     var piece = ui_element.draggable;
     var destination_square = event.target;
-    if (ui.dnd.validMove(piece, event.target)) {
-        ui.redrawPosition();
+    if (ui.dnd.validMove(piece, event.target, position)) {
+        ui.redrawPosition(position);
         return true;
     } else {
         ui_element.position.top = 0;
