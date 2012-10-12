@@ -131,28 +131,38 @@ test('removeCaptured', function() {
 module('King Checks', {});
 
 test('Not under check', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(boardPosition),
+        black_king_position,
+        white_king_position;
+
     position.setupFromFen(
         'rnbqkbnr/pppp1ppp/8/4p3/3P4/4P3/PPP2PPP/RNBQKBNR w KQkq - 0 1');
-    equal(position.isUnderCheck('w'), false);
+    white_king_position = position.getKingPosition('w'),
+    black_king_position = position.getKingPosition('b');
+
+    equal(position.isUnderCheck(white_king_position), false);
     position.makeAlgebraicMove('f2', 'f3');
-    equal(position.isUnderCheck('w'), false);
+    equal(position.isUnderCheck(black_king_position), false);
     position.makeAlgebraicMove('d6', 'd5');
-    equal(position.isUnderCheck('w'), false);
+    equal(position.isUnderCheck(white_king_position), false);
 });
 
 test('Under bishop check', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(boardPosition),
+        black_king_position;
     position.setupFromFen(
         'rnbqkbnr/ppp2ppp/3p4/1B2p3/3P4/4P3/PPP2PPP/RNBQK1NR b KQkq - 0 1');
-    equal(position.isUnderCheck('b'), true);
+    black_king_position = position.getKingPosition('b');
+    equal(position.isUnderCheck(black_king_position), true);
 });
 
 test('Under queen check', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(boardPosition),
+        white_king_position;
     position.setupFromFen(
         'rnb1kbnr/pp2qppp/2pp4/1B6/3P4/8/PPP2PPP/RNBQK1NR w KQkq - 0 1');
-    equal(position.isUnderCheck('w'), true);
+    white_king_position = position.getKingPosition('w'),
+    equal(position.isUnderCheck(white_king_position), true);
 });
 
 // test('Under pawn check', function() {
@@ -450,4 +460,13 @@ test('Remove Queen side castling capability on Q-Rook move', function() {
     equal(position.castling.w, 'k');
     position.makeAlgebraicMove('a8', 'b8');
     equal(position.castling.b, 'k');
+});
+
+test('Castling squares are under attack', function() {
+    var position = Object.create(boardPosition);
+    position.setupFromFen(
+        'r1bqk2r/p1pp2pp/1pn2p2/4p3/1NB1P3/3PbN2/PPP1QPPP/R3K2R b KQkq - 0 1');
+    equal(position.makeAlgebraicMove('e8', 'g8'), false);
+    position.toggleTrait();
+    equal(position.makeAlgebraicMove('e1', 'c1'), false);
 });

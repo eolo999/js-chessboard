@@ -67,8 +67,9 @@ ui.drawPieces = function(position) {
 };
 
 ui.drawCheck = function(position) {
-    var trait = position.trait;
-    if (position.isUnderCheck(trait)) {
+    var trait = position.trait,
+        king_position = position.getKingPosition(trait);
+    if (position.isUnderCheck(king_position)) {
     $('#under_check').attr('class', 'check');
     } else {
     $('#under_check').attr('class', '');

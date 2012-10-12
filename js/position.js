@@ -1,5 +1,9 @@
 /*global board, jQuery*/
 
+var game = {
+};
+
+
 var boardPosition = {
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     validMovesTable: board.generateValidMovesTable(),
@@ -176,6 +180,7 @@ var boardPosition = {
      */
     makeMove: function(start, end) {
         var temp_position,
+            king_position,
             moving_piece_abbr,
             moving_piece,
             moving_piece_color,
@@ -263,7 +268,8 @@ var boardPosition = {
 
         // Restore board as it was before the mess because king has been left
         // under check
-        if (temp_position.isUnderCheck(moving_piece_color)) {
+        king_position = temp_position.getKingPosition(moving_piece_color);
+        if (temp_position.isUnderCheck(king_position)) {
             return false;
         }
 
@@ -319,30 +325,40 @@ var boardPosition = {
         castling_capabilities = this.castling[color];
         if (start - end === 2 && castling_capabilities.indexOf('q') !== -1) {
             if (color === 'w' &&
-                    this.pieces[1] === 0 &&
-                    this.pieces[2] === 0 &&
-                    this.pieces[3] === 0) {
+                    this.pieces[0x1] === 0 &&
+                    (!this.isUnderCheck(0x1)) &&
+                    this.pieces[0x2] === 0 &&
+                    (!this.isUnderCheck(0x2)) &&
+                    this.pieces[0x3] === 0 &&
+                    (!this.isUnderCheck(0x3))) {
                 castleQueenSide(this, start, end);
                 return true;
             }
             if (color === 'b' &&
                     this.pieces[0x71] === 0 &&
+                    (!this.isUnderCheck(0x71)) &&
                     this.pieces[0x72] === 0 &&
-                    this.pieces[0x73] === 0) {
+                    (!this.isUnderCheck(0x72)) &&
+                    this.pieces[0x73] === 0 &&
+                    (!this.isUnderCheck(0x73))) {
                 castleQueenSide(this, start, end);
                 return true;
             }
         }
         if (start - end === -2 && castling_capabilities.indexOf('k') !== -1) {
             if (color === 'w' &&
-                    this.pieces[5] === 0 &&
-                    this.pieces[6] === 0) {
+                    this.pieces[0x5] === 0 &&
+                    (!this.isUnderCheck(0x5)) &&
+                    this.pieces[0x6] === 0 &&
+                    (!this.isUnderCheck(0x6))) {
                 castleKingSide(this, start, end);
                 return true;
             }
             if (color === 'b' &&
                     this.pieces[0x75] === 0 &&
-                    this.pieces[0x76] === 0) {
+                    (!this.isUnderCheck(0x75)) &&
+                    this.pieces[0x76] === 0 &&
+                    (!this.isUnderCheck(0x76))) {
                 castleKingSide(this, start, end);
                 return true;
             }
@@ -523,16 +539,18 @@ var boardPosition = {
         return piece_abbr;
     },
 
-    isUnderCheck: function(color) {
-        var king_position,
-            index,
+    isUnderCheck: function(king_position) {
+        var index,
+            king,
+            color,
             start,
             piece,
             piece_name,
             starting_squares,
             starting_knight_squares;
 
-        king_position = this.getKingPosition(color);
+        king = this.pieces[king_position];
+        color = (king !== 0) ? board.getPieceColor(king) : this.trait;
         // Sliding pieces
         starting_squares = this.validMovesTable.queen[king_position];
         for (index = 0; index < starting_squares.length; index += 1) {
@@ -546,8 +564,7 @@ var boardPosition = {
                     ('QBRqbr'.indexOf(piece) !== -1) &&
                     // The piece is not of the same color of the king
                     (board.getPieceColor(piece) !== color) &&
-                    (this.validMovesTable[piece_name][start]
-                     .indexOf(king_position) !== -1) &&
+                    (this.validMovesTable[piece_name][start].indexOf(king_position) !== -1) &&
                     // The piece has no obstacles
                     (!this.hasObstacles(piece, start, king_position))
             ) {
