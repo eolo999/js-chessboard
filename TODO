@@ -1,5 +1,7 @@
-* Enforce trait
-* Pawn captures, how to solve it?
-* Black pawns allowed moves are in different direction
-* Pieces cannot cross other pieces (except Knight)
-* It is slow!
+* CheckMate/StallMate recognition.
+* Pawn checks.
+* Obstacled castling.
+* Display moves.
+* Prev/Next move a.k.a. History.
+* History branching (variations).
+* PGN support.
