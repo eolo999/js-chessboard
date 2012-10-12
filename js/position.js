@@ -326,7 +326,6 @@ var boardPosition = {
         if (start - end === 2 && castling_capabilities.indexOf('q') !== -1) {
             if (color === 'w' &&
                     this.pieces[0x1] === 0 &&
-                    (!this.isUnderCheck(0x1)) &&
                     this.pieces[0x2] === 0 &&
                     (!this.isUnderCheck(0x2)) &&
                     this.pieces[0x3] === 0 &&
@@ -336,7 +335,6 @@ var boardPosition = {
             }
             if (color === 'b' &&
                     this.pieces[0x71] === 0 &&
-                    (!this.isUnderCheck(0x71)) &&
                     this.pieces[0x72] === 0 &&
                     (!this.isUnderCheck(0x72)) &&
                     this.pieces[0x73] === 0 &&
