@@ -1,114 +1,114 @@
-module('board');
+module('chessUtils');
 
 test('onBoard', function() {
-    equal(board.onBoard(-0x1), false, '-0x1 is not on board');
-    equal(board.onBoard(0x0), true, 'a1 is on board');
-    equal(board.onBoard(0x7), true, 'h1 is on board');
-    equal(board.onBoard(0x8), false, '0x8 is not on board');
-    equal(board.onBoard(0x10), true, 'a2 is on board');
-    equal(board.onBoard(0x17), true, 'h2 is on board');
-    equal(board.onBoard(0x18), false, '0x18 is not on board');
-    equal(board.onBoard(0x20), true, 'a3 is on board');
-    equal(board.onBoard(0x27), true, 'h3 is on board');
-    equal(board.onBoard(0x28), false, '0x28 is not on board');
-    equal(board.onBoard(0x30), true, 'a4 is on board');
-    equal(board.onBoard(0x37), true, 'h4 is on board');
-    equal(board.onBoard(0x38), false, '0x38 is not on board');
-    equal(board.onBoard(0x40), true, 'a5 is on board');
-    equal(board.onBoard(0x47), true, 'h5 is on board');
-    equal(board.onBoard(0x48), false, '0x48 is not on board');
-    equal(board.onBoard(0x50), true, 'a6 is on board');
-    equal(board.onBoard(0x57), true, 'h6 is on board');
-    equal(board.onBoard(0x58), false, '0x58 is not on board');
-    equal(board.onBoard(0x60), true, 'a7 is on board');
-    equal(board.onBoard(0x67), true, 'h7 is on board');
-    equal(board.onBoard(0x68), false, '0x68 is not on board');
-    equal(board.onBoard(0x70), true, 'a8 is on board');
-    equal(board.onBoard(0x77), true, 'h8 is on board');
-    equal(board.onBoard(0x78), false, '0x78 is not on board');
-    equal(board.onBoard(0x81), false, '0x81 is not on board');
+    equal(chessUtils.onBoard(-0x1), false, '-0x1 is not on board');
+    equal(chessUtils.onBoard(0x0), true, 'a1 is on board');
+    equal(chessUtils.onBoard(0x7), true, 'h1 is on board');
+    equal(chessUtils.onBoard(0x8), false, '0x8 is not on board');
+    equal(chessUtils.onBoard(0x10), true, 'a2 is on board');
+    equal(chessUtils.onBoard(0x17), true, 'h2 is on board');
+    equal(chessUtils.onBoard(0x18), false, '0x18 is not on board');
+    equal(chessUtils.onBoard(0x20), true, 'a3 is on board');
+    equal(chessUtils.onBoard(0x27), true, 'h3 is on board');
+    equal(chessUtils.onBoard(0x28), false, '0x28 is not on board');
+    equal(chessUtils.onBoard(0x30), true, 'a4 is on board');
+    equal(chessUtils.onBoard(0x37), true, 'h4 is on board');
+    equal(chessUtils.onBoard(0x38), false, '0x38 is not on board');
+    equal(chessUtils.onBoard(0x40), true, 'a5 is on board');
+    equal(chessUtils.onBoard(0x47), true, 'h5 is on board');
+    equal(chessUtils.onBoard(0x48), false, '0x48 is not on board');
+    equal(chessUtils.onBoard(0x50), true, 'a6 is on board');
+    equal(chessUtils.onBoard(0x57), true, 'h6 is on board');
+    equal(chessUtils.onBoard(0x58), false, '0x58 is not on board');
+    equal(chessUtils.onBoard(0x60), true, 'a7 is on board');
+    equal(chessUtils.onBoard(0x67), true, 'h7 is on board');
+    equal(chessUtils.onBoard(0x68), false, '0x68 is not on board');
+    equal(chessUtils.onBoard(0x70), true, 'a8 is on board');
+    equal(chessUtils.onBoard(0x77), true, 'h8 is on board');
+    equal(chessUtils.onBoard(0x78), false, '0x78 is not on board');
+    equal(chessUtils.onBoard(0x81), false, '0x81 is not on board');
 });
 
 test('getColumn', function() {
-    equal(board.getColumn(0x0), 0);
-    equal(board.getColumn(0x7), 7);
-    equal(board.getColumn(0x10), 0);
-    equal(board.getColumn(0x17), 7);
-    equal(board.getColumn(0x20), 0);
-    equal(board.getColumn(0x27), 7);
-    equal(board.getColumn(0x30), 0);
-    equal(board.getColumn(0x37), 7);
-    equal(board.getColumn(0x40), 0);
-    equal(board.getColumn(0x47), 7);
-    equal(board.getColumn(0x50), 0);
-    equal(board.getColumn(0x57), 7);
-    equal(board.getColumn(0x60), 0);
-    equal(board.getColumn(0x67), 7);
-    equal(board.getColumn(0x70), 0);
-    equal(board.getColumn(0x77), 7);
+    equal(chessUtils.getColumn(0x0), 0);
+    equal(chessUtils.getColumn(0x7), 7);
+    equal(chessUtils.getColumn(0x10), 0);
+    equal(chessUtils.getColumn(0x17), 7);
+    equal(chessUtils.getColumn(0x20), 0);
+    equal(chessUtils.getColumn(0x27), 7);
+    equal(chessUtils.getColumn(0x30), 0);
+    equal(chessUtils.getColumn(0x37), 7);
+    equal(chessUtils.getColumn(0x40), 0);
+    equal(chessUtils.getColumn(0x47), 7);
+    equal(chessUtils.getColumn(0x50), 0);
+    equal(chessUtils.getColumn(0x57), 7);
+    equal(chessUtils.getColumn(0x60), 0);
+    equal(chessUtils.getColumn(0x67), 7);
+    equal(chessUtils.getColumn(0x70), 0);
+    equal(chessUtils.getColumn(0x77), 7);
 });
 
 test('getRank', function() {
-    equal(board.getRank(0x0), 0);
-    equal(board.getRank(0x7), 0);
-    equal(board.getRank(0x10), 1);
-    equal(board.getRank(0x17), 1);
-    equal(board.getRank(0x20), 2);
-    equal(board.getRank(0x27), 2);
-    equal(board.getRank(0x30), 3);
-    equal(board.getRank(0x37), 3);
-    equal(board.getRank(0x40), 4);
-    equal(board.getRank(0x47), 4);
-    equal(board.getRank(0x50), 5);
-    equal(board.getRank(0x57), 5);
-    equal(board.getRank(0x60), 6);
-    equal(board.getRank(0x67), 6);
-    equal(board.getRank(0x70), 7);
-    equal(board.getRank(0x77), 7);
+    equal(chessUtils.getRank(0x0), 0);
+    equal(chessUtils.getRank(0x7), 0);
+    equal(chessUtils.getRank(0x10), 1);
+    equal(chessUtils.getRank(0x17), 1);
+    equal(chessUtils.getRank(0x20), 2);
+    equal(chessUtils.getRank(0x27), 2);
+    equal(chessUtils.getRank(0x30), 3);
+    equal(chessUtils.getRank(0x37), 3);
+    equal(chessUtils.getRank(0x40), 4);
+    equal(chessUtils.getRank(0x47), 4);
+    equal(chessUtils.getRank(0x50), 5);
+    equal(chessUtils.getRank(0x57), 5);
+    equal(chessUtils.getRank(0x60), 6);
+    equal(chessUtils.getRank(0x67), 6);
+    equal(chessUtils.getRank(0x70), 7);
+    equal(chessUtils.getRank(0x77), 7);
 });
 
 test('algebraicToNumber', function() {
-    equal(board.algebraicToNumber('a1'), 0);
-    equal(board.algebraicToNumber('a8'), 0x70);
-    equal(board.algebraicToNumber('e4'), 0x34);
-    equal(board.algebraicToNumber('c6'), 0x52);
-    equal(board.algebraicToNumber('h1'), 0x7);
-    equal(board.algebraicToNumber('h8'), 0x77);
-    equal(board.algebraicToNumber('B7'), undefined);
-    equal(board.algebraicToNumber('b9'), undefined);
-    equal(board.algebraicToNumber('z9'), undefined);
+    equal(chessUtils.algebraicToNumber('a1'), 0);
+    equal(chessUtils.algebraicToNumber('a8'), 0x70);
+    equal(chessUtils.algebraicToNumber('e4'), 0x34);
+    equal(chessUtils.algebraicToNumber('c6'), 0x52);
+    equal(chessUtils.algebraicToNumber('h1'), 0x7);
+    equal(chessUtils.algebraicToNumber('h8'), 0x77);
+    equal(chessUtils.algebraicToNumber('B7'), undefined);
+    equal(chessUtils.algebraicToNumber('b9'), undefined);
+    equal(chessUtils.algebraicToNumber('z9'), undefined);
 });
 
 test('numberToAlgebraic', function() {
-    equal(board.numberToAlgebraic(-0x1), undefined);
-    equal(board.numberToAlgebraic(0x0), 'a1');
-    equal(board.numberToAlgebraic(0x70), 'a8');
-    equal(board.numberToAlgebraic(0x34), 'e4');
-    equal(board.numberToAlgebraic(0x52), 'c6');
-    equal(board.numberToAlgebraic(0x7), 'h1');
-    equal(board.numberToAlgebraic(0x77), 'h8');
-    equal(board.numberToAlgebraic(0x78), undefined);
+    equal(chessUtils.numberToAlgebraic(-0x1), undefined);
+    equal(chessUtils.numberToAlgebraic(0x0), 'a1');
+    equal(chessUtils.numberToAlgebraic(0x70), 'a8');
+    equal(chessUtils.numberToAlgebraic(0x34), 'e4');
+    equal(chessUtils.numberToAlgebraic(0x52), 'c6');
+    equal(chessUtils.numberToAlgebraic(0x7), 'h1');
+    equal(chessUtils.numberToAlgebraic(0x77), 'h8');
+    equal(chessUtils.numberToAlgebraic(0x78), undefined);
 });
 
 test('getPieceColor', function() {
-    equal(board.getPieceColor('P'), 'w');
-    equal(board.getPieceColor('N'), 'w');
-    equal(board.getPieceColor('B'), 'w');
-    equal(board.getPieceColor('R'), 'w');
-    equal(board.getPieceColor('Q'), 'w');
-    equal(board.getPieceColor('K'), 'w');
-    equal(board.getPieceColor('p'), 'b');
-    equal(board.getPieceColor('n'), 'b');
-    equal(board.getPieceColor('b'), 'b');
-    equal(board.getPieceColor('r'), 'b');
-    equal(board.getPieceColor('q'), 'b');
-    equal(board.getPieceColor('k'), 'b');
+    equal(chessUtils.getPieceColor('P'), 'w');
+    equal(chessUtils.getPieceColor('N'), 'w');
+    equal(chessUtils.getPieceColor('B'), 'w');
+    equal(chessUtils.getPieceColor('R'), 'w');
+    equal(chessUtils.getPieceColor('Q'), 'w');
+    equal(chessUtils.getPieceColor('K'), 'w');
+    equal(chessUtils.getPieceColor('p'), 'b');
+    equal(chessUtils.getPieceColor('n'), 'b');
+    equal(chessUtils.getPieceColor('b'), 'b');
+    equal(chessUtils.getPieceColor('r'), 'b');
+    equal(chessUtils.getPieceColor('q'), 'b');
+    equal(chessUtils.getPieceColor('k'), 'b');
 });
 
 module('position', {});
 
 test('toggleTrait', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen();
     equal(position.trait, 'w')
     position.toggleTrait();
@@ -120,7 +120,7 @@ test('toggleTrait', function() {
 });
 
 test('removeCaptured', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen();
     equal(position.pieces[0], 'R');
     position.removeCaptured(0);
@@ -131,7 +131,7 @@ test('removeCaptured', function() {
 module('King Checks', {});
 
 test('Not under check', function() {
-    var position = Object.create(boardPosition),
+    var position = Object.create(chessPosition),
         black_king_position,
         white_king_position;
 
@@ -148,7 +148,7 @@ test('Not under check', function() {
 });
 
 test('Under bishop check', function() {
-    var position = Object.create(boardPosition),
+    var position = Object.create(chessPosition),
         black_king_position;
     position.setupFromFen(
         'rnbqkbnr/ppp2ppp/3p4/1B2p3/3P4/4P3/PPP2PPP/RNBQK1NR b KQkq - 0 1');
@@ -157,7 +157,7 @@ test('Under bishop check', function() {
 });
 
 test('Under queen check', function() {
-    var position = Object.create(boardPosition),
+    var position = Object.create(chessPosition),
         white_king_position;
     position.setupFromFen(
         'rnb1kbnr/pp2qppp/2pp4/1B6/3P4/8/PPP2PPP/RNBQK1NR w KQkq - 0 1');
@@ -166,35 +166,35 @@ test('Under queen check', function() {
 });
 
 // test('Under pawn check', function() {
-//     board.setupFromFen('4k3/3P4/8/8/8/8/8/7K b - - 0 1');
-//     equal(board.isUnderCheck('b'), true);
+//     chessUtils.setupFromFen('4k3/3P4/8/8/8/8/8/7K b - - 0 1');
+//     equal(chessUtils.isUnderCheck('b'), true);
 // });
 
 module('makeMove', {});
 
 test('Start square is empty', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     equal(position.makeAlgebraicMove('a4', 'a5'), false);
 });
 
 test('Moving piece has not trait', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     equal(position.makeAlgebraicMove('a7', 'a5'), false);
 });
 
 test('Cannot capture same color pieces', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     equal(position.makeAlgebraicMove('a1', 'a2'), false);
 });
 
 test('Cannot put the king under check with a move', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     ok(position.makeAlgebraicMove('e4', 'e5'));
@@ -203,7 +203,7 @@ test('Cannot put the king under check with a move', function() {
 });
 
 test('White Cannot move on unreachable empty square', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     // white pawn
@@ -248,7 +248,7 @@ test('White Cannot move on unreachable empty square', function() {
 });
 
 test('Black Cannot move on unreachable empty square', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     position.toggleTrait();
@@ -294,22 +294,22 @@ test('Black Cannot move on unreachable empty square', function() {
 });
 
 test('Set en passant square and capture', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2');
     ok(position.enpassant == 82);
     ok(position.makeAlgebraicMove('d2', 'd4'));
-    ok(position.enpassant == board.algebraicToNumber('d3'));
+    ok(position.enpassant == chessUtils.algebraicToNumber('d3'));
     ok(position.makeAlgebraicMove('d7', 'd5'));
-    ok(position.enpassant == board.algebraicToNumber('d6'));
+    ok(position.enpassant == chessUtils.algebraicToNumber('d6'));
     ok(position.makeAlgebraicMove('e4', 'e5'));
     ok(position.makeAlgebraicMove('f7', 'f5'));
-    ok(position.enpassant == board.algebraicToNumber('f6'));
+    ok(position.enpassant == chessUtils.algebraicToNumber('f6'));
     ok(position.makeAlgebraicMove('e5', 'f6'));
 });
 
 test('White Bishop cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '6k1/8/2p1p3/3B4/2P1P3/8/8/6K1 w - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'b7'), false);
@@ -319,7 +319,7 @@ test('White Bishop cannot go after obstacles', function() {
 });
 
 test('Black Bishop cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '6k1/8/2p1p3/3b4/2P1P3/8/8/6K1 b - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'b7'), false);
@@ -329,7 +329,7 @@ test('Black Bishop cannot go after obstacles', function() {
 });
 
 test('White Rook cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '7k/8/3p4/2PRp3/3P4/8/8/7K w - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'd3'), false);
@@ -339,7 +339,7 @@ test('White Rook cannot go after obstacles', function() {
 });
 
 test('Black Rook cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '7k/8/3p4/2Prp3/3P4/8/8/7K b - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'd3'), false);
@@ -349,7 +349,7 @@ test('Black Rook cannot go after obstacles', function() {
 });
 
 test('White Queen cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '7k/8/2ppp3/2pQP3/2PPP3/8/8/7K w - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'b7'), false);
@@ -363,7 +363,7 @@ test('White Queen cannot go after obstacles', function() {
 });
 
 test('Black Queen cannot go after obstacles', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         '7k/8/2ppp3/2pqP3/2PPP3/8/8/7K b - - 0 1');
     equal(position.makeAlgebraicMove('d5', 'b7'), false);
@@ -379,19 +379,19 @@ test('Black Queen cannot go after obstacles', function() {
 module('Castling', {});
 
 test('Valid King side castling', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     ok(position.makeAlgebraicMove('e1', 'g1'));
-    ok(position.pieces[board.algebraicToNumber('g1')] == 'K');
-    ok(position.pieces[board.algebraicToNumber('f1')] == 'R');
+    ok(position.pieces[chessUtils.algebraicToNumber('g1')] == 'K');
+    ok(position.pieces[chessUtils.algebraicToNumber('f1')] == 'R');
     ok(position.makeAlgebraicMove('e8', 'g8'));
-    ok(position.pieces[board.algebraicToNumber('g8')] == 'k');
-    ok(position.pieces[board.algebraicToNumber('f8')] == 'r');
+    ok(position.pieces[chessUtils.algebraicToNumber('g8')] == 'k');
+    ok(position.pieces[chessUtils.algebraicToNumber('f8')] == 'r');
 });
 
 test('Invalid King side castling', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     // Move bishops back on their respective 1st rank
@@ -406,19 +406,19 @@ test('Invalid King side castling', function() {
 });
 
 test('Valid Queen side castling', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     ok(position.makeAlgebraicMove('e1', 'c1'));
-    ok(position.pieces[board.algebraicToNumber('c1')] == 'K');
-    ok(position.pieces[board.algebraicToNumber('d1')] == 'R');
+    ok(position.pieces[chessUtils.algebraicToNumber('c1')] == 'K');
+    ok(position.pieces[chessUtils.algebraicToNumber('d1')] == 'R');
     ok(position.makeAlgebraicMove('e8', 'c8'));
-    ok(position.pieces[board.algebraicToNumber('c8')] == 'k');
-    ok(position.pieces[board.algebraicToNumber('d8')] == 'r');
+    ok(position.pieces[chessUtils.algebraicToNumber('c8')] == 'k');
+    ok(position.pieces[chessUtils.algebraicToNumber('d8')] == 'r');
 });
 
 test('Invalid Queen side castling', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     // Move queens back on their respective 1st rank
@@ -433,7 +433,7 @@ test('Invalid Queen side castling', function() {
 });
 
 test('Remove all castling capabilities on king\'s move', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     position.makeAlgebraicMove('e1', 'f1');
@@ -443,7 +443,7 @@ test('Remove all castling capabilities on king\'s move', function() {
 });
 
 test('Remove King side castling capability on K-Rook move', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     position.makeAlgebraicMove('h1', 'g1');
@@ -453,7 +453,7 @@ test('Remove King side castling capability on K-Rook move', function() {
 });
 
 test('Remove Queen side castling capability on Q-Rook move', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r3k2r/pbpp1ppp/1pn2q1n/2b1p3/2B1P3/1PN2Q1N/PBPP1PPP/R3K2R w KQkq - 0 1');
     position.makeAlgebraicMove('a1', 'b1');
@@ -463,7 +463,7 @@ test('Remove Queen side castling capability on Q-Rook move', function() {
 });
 
 test('Castling squares are under attack', function() {
-    var position = Object.create(boardPosition);
+    var position = Object.create(chessPosition);
     position.setupFromFen(
         'r1bqk2r/p1pp2pp/1pn2p2/4p3/1NB1P3/3PbN2/PPP1QPPP/R3K2R b KQkq - 0 1');
     equal(position.makeAlgebraicMove('e8', 'g8'), false);

@@ -1,9 +1,9 @@
-var ui = {
+var chessBoard = {
     position: null,
 
     init: function() {
         var fen_string = document.getElementById('fen_string').value;
-        this.position = Object.create(boardPosition);
+        this.position = Object.create(chessPosition);
         this.position.setupFromFen(fen_string);
     },
 
@@ -19,7 +19,7 @@ var ui = {
         var tr = null;
         var old_tr = null;
         for (var square = 0; square < 0x80; square++) {
-            if (board.onBoard(square)) {
+            if (chessUtils.onBoard(square)) {
                 if (square_counter % 8 == 0) {
                     if (tr) {
                         table.insertBefore(tr, old_tr);
@@ -27,10 +27,10 @@ var ui = {
                     }
                     tr = document.createElement('tr');
                 }
-                var color = board.COLORS[square];
+                var color = chessUtils.COLORS[square];
                 var td = document.createElement('td');
                 td.setAttribute('id', 'square_' + square);
-                td.setAttribute('class', 'droppable square ' + board.COLOR[color]);
+                td.setAttribute('class', 'droppable square ' + chessUtils.COLOR[color]);
                 tr.appendChild(td);
                 square_counter += 1;
             }
@@ -46,7 +46,7 @@ var ui = {
      */
     resetPieces: function() {
         for (var square = 0; square < 0x80; square++) {
-            if (board.onBoard(square)) {
+            if (chessUtils.onBoard(square)) {
                 var square_node = document.getElementById('square_' + square);
                 square_node.innerHTML = '';
             }
@@ -60,7 +60,7 @@ var ui = {
      */
     drawPieces: function() {
         for (var square = 0; square < 0x80; square++) {
-            if (board.onBoard(square)) {
+            if (chessUtils.onBoard(square)) {
                 var piece = this.position.pieces[square];
                 if (piece != 0) {
                     var square_node = document.getElementById('square_' + square);
@@ -107,7 +107,7 @@ var ui = {
         if (this.position.enpassant == '-') {
             $('#en_passant').text('-');
         } else {
-            $('#en_passant').text(board.numberToAlgebraic(this.position.enpassant));
+            $('#en_passant').text(chessUtils.numberToAlgebraic(this.position.enpassant));
         }
     },
 

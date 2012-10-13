@@ -1,16 +1,16 @@
 /*global board, jQuery*/
 
-var boardPosition = {
+var chessPosition = {
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    validMovesTable: board.generateValidMovesTable(),
-    pieces: board.initZerosArray(),
+    validMovesTable: chessUtils.generateValidMovesTable(),
+    pieces: chessUtils.initZerosArray(),
     trait: 'w',
     castling: {w: 'kq', b: 'kq'},
     halfmove: '0',
     fullmove: '1',
 
     resetPieces: function() {
-        this.pieces = board.initZerosArray();
+        this.pieces = chessUtils.initZerosArray();
     },
 
     toggleTrait: function() {
@@ -78,11 +78,11 @@ var boardPosition = {
             this.fen = fen_string;
         }
 
-        if (board.validateFEN(this.fen)) {
+        if (chessUtils.validateFEN(this.fen)) {
             fen_array = this.fen.split(' ');
             enpassant = fen_array[3];
             if (enpassant !== '-') {
-                enpassant = board.algebraicToNumber(enpassant);
+                enpassant = chessUtils.algebraicToNumber(enpassant);
             }
             setupPieces(this, fen_array[0]);
             setupPosition(this, 'trait', fen_array[1]);
@@ -102,14 +102,14 @@ var boardPosition = {
 
         if (color === 'w') {
             diagonals = [
-                board.moveDirectionDelta.north_west,
-                board.moveDirectionDelta.north_east
+                chessUtils.moveDirectionDelta.north_west,
+                chessUtils.moveDirectionDelta.north_east
             ];
             // Cannot capture straight ahead.
             if (this.pieces[start + rank_delta] === 0) {
                 step = [start + rank_delta];
                 // Can step 2 squares ahead when on 2nd rank.
-                if (board.getRank(start) === 1) {
+                if (chessUtils.getRank(start) === 1) {
                     if (this.pieces[start + (rank_delta * 2)] === 0) {
                         step = step.concat([start + (rank_delta * 2)]);
                     }
@@ -117,14 +117,14 @@ var boardPosition = {
             }
         } else {
             diagonals = [
-                board.moveDirectionDelta.south_west,
-                board.moveDirectionDelta.south_east
+                chessUtils.moveDirectionDelta.south_west,
+                chessUtils.moveDirectionDelta.south_east
             ];
             // Cannot capture straight ahead.
             if (this.pieces[start - rank_delta] === 0) {
                 step = [start - rank_delta];
                 // Can step 2 squares ahead when on 7th rank.
-                if (board.getRank(start) === 6) {
+                if (chessUtils.getRank(start) === 6) {
                     if (this.pieces[start - (rank_delta * 2)] === 0) {
                         step = step.concat([start - (rank_delta * 2)]);
                     }
@@ -149,8 +149,8 @@ var boardPosition = {
      * @return {boolean} Wether the move has been done or not.
      */
     makeAlgebraicMove: function(start, end) {
-        return this.makeMove(board.algebraicToNumber(start),
-                board.algebraicToNumber(end));
+        return this.makeMove(chessUtils.algebraicToNumber(start),
+                chessUtils.algebraicToNumber(end));
     },
 
     /**
@@ -198,8 +198,8 @@ var boardPosition = {
         if (moving_piece_abbr === 0) {
             return false;
         }
-        moving_piece = board.piecesAbbreviation[moving_piece_abbr];
-        moving_piece_color = board.getPieceColor(moving_piece_abbr);
+        moving_piece = chessUtils.piecesAbbreviation[moving_piece_abbr];
+        moving_piece_color = chessUtils.getPieceColor(moving_piece_abbr);
         // Do not move when it's not your turn
         if (moving_piece_color !== temp_position.trait) {
             return false;
@@ -207,7 +207,7 @@ var boardPosition = {
         captured_piece_abbr = temp_position.pieces[end];
         // Do not capture same color pieces
         if (captured_piece_abbr !== 0 &&
-                board.getPieceColor(captured_piece_abbr) ===
+                chessUtils.getPieceColor(captured_piece_abbr) ===
                 moving_piece_color) {
             return false;
         }
@@ -416,7 +416,7 @@ var boardPosition = {
             return false;
         }
 
-        piece_name = board.piecesAbbreviation[piece];
+        piece_name = chessUtils.piecesAbbreviation[piece];
         if (piece.toUpperCase() === 'R') {
             return hasRookObstacles(this, start, end);
         }
@@ -449,15 +449,15 @@ var boardPosition = {
         } else {
             // En passant capture
             diagonals = [
-                board.moveDirectionDelta.north_east,
-                board.moveDirectionDelta.north_west
+                chessUtils.moveDirectionDelta.north_east,
+                chessUtils.moveDirectionDelta.north_west
             ];
             if (diagonals.indexOf(Math.abs(start - end)) !== -1) {
                 if (moving_piece_abbr === 'P') {
-                    this.removeCaptured(end + board.moveDirectionDelta.south);
+                    this.removeCaptured(end + chessUtils.moveDirectionDelta.south);
                 }
                 if (moving_piece_abbr === 'p') {
-                    this.removeCaptured(end + board.moveDirectionDelta.north);
+                    this.removeCaptured(end + chessUtils.moveDirectionDelta.north);
                 }
             }
         }
@@ -524,10 +524,10 @@ var boardPosition = {
      * @return {string} Queen or original piece.
      */
     handlePawnPromotion: function(piece_abbr, end) {
-        if (piece_abbr === 'P' && board.getRank(end) === 7) {
+        if (piece_abbr === 'P' && chessUtils.getRank(end) === 7) {
             return 'Q';
         }
-        if (piece_abbr === 'p' && board.getRank(end) === 0) {
+        if (piece_abbr === 'p' && chessUtils.getRank(end) === 0) {
             return 'q';
         }
         return piece_abbr;
@@ -544,20 +544,20 @@ var boardPosition = {
             starting_knight_squares;
 
         king = this.pieces[king_position];
-        color = (king !== 0) ? board.getPieceColor(king) : this.trait;
+        color = (king !== 0) ? chessUtils.getPieceColor(king) : this.trait;
         // Sliding pieces
         starting_squares = this.validMovesTable.queen[king_position];
         for (index = 0; index < starting_squares.length; index += 1) {
             start = starting_squares[index];
             piece = this.pieces[start];
-            piece_name = board.piecesAbbreviation[piece];
+            piece_name = chessUtils.piecesAbbreviation[piece];
             if (
                 // There is a piece on the square
                 (piece !== 0) &&
                     // The piece is one among Queen, Rook and Bishop
                     ('QBRqbr'.indexOf(piece) !== -1) &&
                     // The piece is not of the same color of the king
-                    (board.getPieceColor(piece) !== color) &&
+                    (chessUtils.getPieceColor(piece) !== color) &&
                     (this.validMovesTable[piece_name][start].indexOf(king_position) !== -1) &&
                     // The piece has no obstacles
                     (!this.hasObstacles(piece, start, king_position))
@@ -572,7 +572,7 @@ var boardPosition = {
             piece = this.pieces[start];
             if (piece !== 0 &&
                     ('Nn'.indexOf(piece) !== -1) &&
-                    (board.getPieceColor(piece) !== color)) {
+                    (chessUtils.getPieceColor(piece) !== color)) {
                 return true;
             }
         }
