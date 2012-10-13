@@ -1,6 +1,5 @@
 * CheckMate/StallMate recognition.
 * Pawn checks.
-* Obstacled castling.
 * Display moves.
 * Prev/Next move a.k.a. History.
 * History branching (variations).

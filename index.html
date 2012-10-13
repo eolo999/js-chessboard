@@ -11,10 +11,10 @@
         <script type="text/javascript" src="/js/ui.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                var position = Object.create(boardPosition);
-                position.setupFromFen();
-                ui.drawBoard();
-                ui.redrawPosition(position);
+                myBoard = Object.create(ui);
+                myBoard.drawBoard();
+                myBoard.init();
+                myBoard.redrawPosition();
             });
         </script>
         <script type="text/javascript">

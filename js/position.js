@@ -1,9 +1,5 @@
 /*global board, jQuery*/
 
-var game = {
-};
-
-
 var boardPosition = {
     fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
     validMovesTable: board.generateValidMovesTable(),
